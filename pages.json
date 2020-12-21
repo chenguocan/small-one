@@ -1,0 +1,238 @@
+{
+	"easycom": {
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/tabBar/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+				// "navigationStyle": "custom"
+				
+			}
+		}, {
+			"path": "pages/reserve/reserve",
+			"style": {
+				"navigationBarTitleText": "预定"
+				// "enablePullDownRefresh": true,
+				// "navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/tabBar/user",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+			// "style": {
+			// 	
+			// }
+		}, {
+			"path": "pages/user/login",
+			"style": {
+				"navigationBarTitleText": "登陆"
+			}
+		}, {
+			"path": "pages/reserve/product",
+			"style": {
+				"navigationBarTitleText": "详情"
+			}
+		}, {
+			"path": "pages/order/createOrder",
+			"style": {
+				"navigationBarTitleText": "创建订单"
+			}
+		}, {
+			"path": "pages/user/setting",
+			"style": {
+				"navigationBarTitleText": "个人认证"
+			}
+		}, {
+			"path": "pages/coupon/coupon",
+			"style": {
+				"navigationBarTitleText": "优惠券"
+
+			}
+		},
+		{
+			"path": "pages/tabBar/search",
+			"style": {
+				"navigationBarTitleText": "酒店预定"
+
+			}
+		},
+		{
+			"path": "pages/order/orderList",
+			"style": {
+				"navigationBarTitleText": "订单列表"
+
+			}
+		}, {
+            "path" : "pages/index/showDetails",
+            "style" : {
+				"navigationBarTitleText": "房间展示详情"
+			}
+        }, {
+            "path" : "pages/index/richText",
+            "style" : {
+				"navigationBarTitleText": "简介"
+			}
+        }, {
+            "path" : "pages/user/card",
+            "style" : {
+				"navigationBarTitleText": "会员卡"
+			}
+        }, {
+            "path" : "pages/user/cardDetail",
+            "style" : {
+				"navigationBarTitleText": "明细"
+			}
+        }, {
+            "path" : "pages/user/guard",
+            "style" : {
+				"navigationBarTitleText": "门禁管理"
+			}
+        }, {
+            "path" : "pages/user/message",
+            "style" : {
+				"navigationBarTitleText": "消息列表"
+			}
+        }, {
+            "path" : "pages/user/messageDetail",
+            "style" : {
+				"navigationBarTitleText": "消息详情"
+			}
+        }
+        ,{
+            "path" : "pages/user/lease",
+            "style" : {
+				"navigationBarTitleText": "我的订单"
+			}
+        }
+        ,{
+            "path" : "pages/user/leaseDetails",
+            "style" : {
+				"navigationBarTitleText": "预定账单详情"
+			}
+        }
+        ,{
+            "path" : "pages/index/bannerImage",
+            "style" : {
+                "navigationBarTitleText": "详情"
+            }
+            
+        },
+		{
+		    "path" : "pages/food/food",
+		    "style" : {
+		        "navigationBarTitleText": "酒店"
+		    }
+		    
+		}
+        ,{
+            "path" : "pages/shopOrder/shopOrder",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/scan/scan",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "扫码",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/shop/shop",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "商城",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#DBF1E1"
+	},
+	"tabBar": {
+		"color": "#313131",
+		"selectedColor": "#1678FF",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+			"pagePath": "pages/tabBar/index",
+			"iconPath": "static/images/tab_icon_home_default.png",
+			"selectedIconPath": "static/images/tab_icon_home_selected.png",
+			"text": "首页"
+
+		},{
+			"pagePath": "pages/shop/shop",
+			"iconPath": "static/images/shop.png",
+			"selectedIconPath": "static/images/shop-active.png",
+			"text": "商城"
+		},{
+			"pagePath": "pages/tabBar/search",
+			"iconPath": "static/images/tab_icon_rent_default.png",
+			"selectedIconPath": "static/images/tab_icon_rent_selected.png",
+			"text": "预定"
+		},{
+			"pagePath": "pages/food/food",
+			"iconPath": "static/images/cook.png",
+			"selectedIconPath": "static/images/cook-active.png",
+			"text": "餐饮"			
+		}, {
+			"pagePath": "pages/tabBar/user",
+			"iconPath": "static/images/tab_icon_user_default.png",
+			"selectedIconPath": "static/images/tab_icon_user_selected.png",
+			"text": "我的"
+		}]
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "登录", //模式名称
+			"path": "pages/user/login", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}, {
+			"name": "预定",
+			"path": "pages/tabBar/search",
+			"query": ""
+		}, {
+			"name": "我的",
+			"path": "pages/tabBar/user",
+			"query": ""
+		}, {
+			"name": "房间详情",
+			"path": "pages/reserve/product",
+			"query": "id=1003&group=1&start=2020-09-10&stop=2020-09-10&type=01040404"
+		}, {
+			"name": "创建订单",
+			"path": "pages/order/createOrder",
+			"query": "id=1002&start=2020-10-27&stop=2020-09-07&type=4&group=1"
+		}, {
+			"name": "展示详情",
+			"path": "pages/index/showDetails",
+			"query": "id=01040404"
+		}, {
+			"name": "订单列表",
+			"path": "pages/order/orderList",
+			"query": "state=1"
+		}, {
+			"name": "会员卡",
+			"path": "pages/user/card",
+			"query": ""
+		}, {
+			"name": "我的订单",
+			"path": "pages/user/lease",
+			"query": ""
+		}]
+	}
+	
+}
