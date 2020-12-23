@@ -123,7 +123,8 @@
 		{
 		    "path" : "pages/food/food",
 		    "style" : {
-		        "navigationBarTitleText": "酒店"
+				"navigationBarBackgroundColor":"#69a6d2",
+		        "navigationBarTitleText": "餐饮"
 		    }
 		    
 		}

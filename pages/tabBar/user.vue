@@ -2,10 +2,10 @@
 	<view>
 		<view class="top">
 			<!-- <view class="pencil" @click="toSetting"></view> -->
-			<view class="email" @click="toEmail" v-if="msgNum>0">
+			<view class="email" @click="xxx" v-if="msgNum>0">  <!-- @click="toEmail" -->
 				<text  class="num">{{msgNum}}</text>
 			</view>
-			<view class="header" @click="toLogin">
+			<view class="header" @click="xxx"><!-- @click="toLogin" -->
 				<view class="headimg">
 					<u-avatar :src="userInfo.avatarUrl" ></u-avatar>
 					<!-- <img :src="userInfo.avatarUrl" alt="" class='img'> -->
@@ -18,7 +18,7 @@
 						<text class='phone'>{{userInfo.avatarUrl ? userInfo.nickName : '立即登录'}}</text>
 					</view>
 					<text class="phone">{{userInfo.avatarUrl ? userInfo.phone : ''}}</text>
-					<view class='phone vip' v-if="is===true" @click='vipNav'>
+					<view class='phone vip' v-if="is===true" @click='xxx'>  <!-- @click='vipNav' -->
 					 我的会员卡
 					<u-icon size="25" class='rightIcon'  color="#f3f4f4" name="arrow-right"></u-icon>
 					</view>
@@ -38,7 +38,7 @@
 			</view> -->
 			<view class='navContent'>
 				<view class='xxx'>
-					<view class="bar" v-for="(item,index) in barList" :key="item.id" @click="toOrderList(index+1)">
+					<view class="bar" v-for="(item,index) in barList" :key="item.id" @click="xxx">  <!-- @click="toOrderList(index+1)" -->
 						<view class='bar_view' :style="{background:item.image,'background-size':size}"></view>
 						<view class="bar_name">
 							{{item.name}}
@@ -48,7 +48,7 @@
 			</view>
 		</view>
 		<view class="floored">
-			<view class="floored_item" v-for="(item,index) in list" :key="index" @click="toFloored(item.index)">
+			<view class="floored_item" v-for="(item,index) in list" :key="index" @click="xxx"> <!-- @click="toFloored(item.index)" -->
 				<view class="floored_view">
 					<view class="floored_img" :style="{background:item.image,'background-size':size}">
 					</view>
@@ -136,14 +136,23 @@
 			// #ifdef MP-WEIXIN
 			this.getAccount();
 			// #endif
-			this.getNewInfoCount();
+			
+			/////////////////////////////////
+			/* this.getNewInfoCount(); */
 			this.register = globalData.register;
-			this.getLockAuthorizeRoom();
+			/* this.getLockAuthorizeRoom(); */
+			//////////////////////////////////
 			// this.getOpenLock();
 			// console.log('userInfo', this.userInfo);
 			// if (openId) this.getAccount();
 		},
 		methods: {
+			xxx(){
+				return uni.showToast({
+					title:'未授权用户',
+					icon:'none'
+				})
+			},
 			/**
 			 * 跳转会员卡界面
 			 */
@@ -278,7 +287,8 @@
 							that.userInfo = resData;
 							globalData.userInfo = resData;
 							that.is=true;
-							that.getMembershipDescription();
+							/////////////////////////
+							/* that.getMembershipDescription(); */
 						} else {
 							that.userInfo = {};
 							globalData.userInfo = {};

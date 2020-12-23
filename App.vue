@@ -22,12 +22,13 @@
 			// #ifdef MP-WEIXIN
 			this.getToLogin();
 			// #endif
+			console.log(res);
 /* 			let scene='4d6375d93c9838ab,3,075,121212';
 			res.query.scene=scene; */
 			uni.setStorageSync('account', '');
 			if (res.query.scene != null) {
-			  let point = res.query.scene.split(",")[3];
-			  let account = res.query.scene.split(",")[4];
+			  let point = res.query.scene.split("*")[1];
+			  let account = res.query.scene.split("*")[2];
 			  if (account != null) uni.setStorageSync('account', account);
 			  if (point != null) uni.setStorageSync('point', point);
 			  setTimeout(function(){
@@ -40,14 +41,6 @@
 			  	})
 			  },0)
 			} //--------------------------------------------------------------------------
-			if(res.scene===1047){
-				setTimeout(function(){
-					uni.switchTab({
-						url:`/pages/food/food`
-						/* url:`/pages/food/food?scene=${scene}` */
-					})
-				},0)
-			}
 		},
 		onShow: function() {
 			// console.log('App Show')

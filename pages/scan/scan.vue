@@ -14,8 +14,7 @@
 		onLoad(){
 			uni.scanCode({
 				success: (res) => {
-					let data=decodeURIComponent(res.rawData);
-					console.log(data);
+					console.log(res);
 				    this.$refs.uToast.show({
 					title: '扫码成功',
 					type: 'success',

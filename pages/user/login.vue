@@ -157,13 +157,13 @@ export default {
 					if (res.data.errCode == 0) {
 						globalData.userInfo = userInfo;
 						globalData.register = true;
-						if(that.nav){
+/* 						if(that.nav){
 							if(that.nav==='food'){
 								uni.switchTab({
 									url:'../food/food'
 								})
 							}
-						}
+						} */
 						uni.navigateBack({});
 						uni.showToast({
 						    title: '登录成功'

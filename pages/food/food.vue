@@ -19,7 +19,7 @@
         <view class="position">
           <image src="/static/image/food/position.jpg"></image>
           <text>{{info.address}}</text>
-		<!--  <u-icon name="scan" size="48" @click="scan"></u-icon> -->
+		 <!-- <u-icon name="scan" size="48" @click="scan"></u-icon> -->
         </view>
         <view class="phone">联系电话：{{info.tel || ''}}</view>
         <view class="phone">桌台号：{{tableName || ''}}</view>
@@ -56,7 +56,7 @@
             <view class="product-sort">{{i.name}}</view>
             <view v-for="(j, goodsIndex) in goods[sortIndex]" :key="goodsIndex" :class="'product-item ' + (goodsIndex==0?'first':'')" @click="onShowGoodsDetails" :data-sort-index="sortIndex" :data-goods-index="goodsIndex" :data-goods-id="j.id" :data-goods-name="j.name" :data-goods-price="j.current_price" :data-goods-quantity="j.quantity" :data-goods-tip="j.tip">
               <view class="product-left">
-                <image :src="j.pic"></image>
+                <image :src="j.picture"></image>
               </view>
               <view class="product-right">
                 <text class="title">{{j.name}}</text>
@@ -157,7 +157,7 @@
     </view>
     <!-- 底部购物车 -->
     <view class="footer" v-if="plateActive==0">
-      <image @click="totalPrice==0?'':'onShowCart'" src="/static/image/food/buy.png"></image>
+      <image @click="onShowCart" src="/static/image/food/buy.png"></image>
       <text class="num" :hidden="totalGoodsNum==0">{{totalGoodsNum}}</text>
       <view class="price-count" v-if="!totalPrice">未选购商品</view>
       <view class="price-count" v-else>￥<text>{{totalPrice}}</text></view>
@@ -178,10 +178,10 @@
     </view>
     <!-- 购物车详情 -->
     <view class="shop-cart-details" :hidden="showCart||purItems==''" @click.stop="onShowCart">
-      <view class="goods" @click.stop="true">
+      <view class="goods">
         <view class="goods-title">
           <text>已选商品</text>
-          <view @click="clearCart">
+          <view @click.stop="clearCart">
             <icon></icon>
             <text>清空</text>
           </view>
@@ -191,7 +191,7 @@
             <!-- <view class="product-item" wx:for="{{purGoodsList}}" wx:key="{{purGoodsKey}}" wx:for-index="purGoodsKey" wx:for-item="j" wx:if="{{goodsNum[i[0]][i[1]]!=0}}"> -->
             <view class="product-item" v-if="goodsNum[i[0]][i[1]]!=0">
               <view class="product-left">
-                <image :src="purGoodsList[purIndexKey].pic"></image>
+                <image :src="purGoodsList[purIndexKey].picture"></image>
               </view>
               <view class="product-right">
                 <text class="title">{{purGoodsList[purIndexKey].name}}</text>
@@ -243,7 +243,7 @@
           <view v-for="(i, purIndexKey) in purIndexArr" :key="purIndexKey">
             <view class="product-item" v-if="goodsNum[i[0]][i[1]]!=0">
               <view class="product-left">
-                <image :src="purGoodsList[purIndexKey].image"></image>
+                <image :src="purGoodsList[purIndexKey].picture"></image>
               </view>
               <view class="product-right">
                 <text class="title">{{purGoodsList[purIndexKey].title}}</text>
@@ -370,7 +370,7 @@ export default {
     // 2020-05-27 22:13:00 增加通过微信扫描带参数的微信二维码的功能，取到的信息为“销售点*帐单号”
     console.log('food.js->onLoad', options.scene); //wx.setStorageSync('account', '')
 	console.log(options);
-    if (options.scene != null) {
+   if (options.scene != null) {
       // undefined
       let point1 = options.scene.split(",")[2];
       let account1 = options.scene.split(",")[3];
@@ -380,7 +380,6 @@ export default {
       if (point1 != null) uni.setStorageSync('point', point1);
     } //--------------------------------------------------------------------------
 
-	
     let appId = uni.getStorageSync('appId');
     let openId = uni.getStorageSync('openId');
 	this.appId=appId;
@@ -398,7 +397,8 @@ export default {
 	}else{
 		this.binding(appId, openId, point, account);
 	}
-	if (register === false || register=== '') {
+	console.log(register);
+/* 	if (register === false || register=== '') {
 		uni.showToast({
 			title:'请授权信息',
 			icon:'none',
@@ -409,7 +409,7 @@ export default {
 			  url: '../user/login?nav=food',
 			})
 		},1500)
-    };
+    }; */
   },
   /**
    * 生命周期函数--监听页面显示
@@ -469,7 +469,6 @@ export default {
       this.goodsNum= goodsNum;
         // 商品数量
       this.sortGoodsNum= sortGoodsNum; // 分类的商品总数
-
     }
   },
 
@@ -882,7 +881,6 @@ export default {
     onShowCart: function () {
       let purIndex = this.purIndex;
       let purIndexArr = []; // 已购买的商品所在位置数组,初始化后的数据
-
       let purGoodsList = []; // 购物车中的商品列表
 
       for (let i = 0; i < purIndex.length; i++) {
@@ -923,7 +921,7 @@ export default {
       console.log(this.point);
       console.log('food.js->onShowGoodsDetails goodsId:', goodsId);
       uni.request({
-        url: prefix + 'Catering/GetItemAboutClient',
+        url: prefix + 'MCC/GetItemAboutClient',
         data: {
           "appId": appId,
           "id": openid,
@@ -1092,7 +1090,7 @@ export default {
       let that = this;
       let firstBinding = this.firstBinding;
       uni.request({
-        url: prefix + 'Catering/IsBindingBill',
+        url: prefix + 'MCC/IsBindingBill',
         data: {
 		  clienttype:1,
 		  openid:openId,
@@ -1152,7 +1150,7 @@ export default {
       //console.log(point)
       let that = this;
       uni.request({
-        url: prefix + 'Catering/Binding',
+        url: prefix + 'MCC/Binding',
         data: {
           id: openid,
           account: account,
@@ -1196,17 +1194,14 @@ export default {
 		console.log(sort);
         for (let i = 0; i < sort.length; i++) {
           let list = sort[i].list;
-
+		  list=JSON.parse(list);
           if (i == 0) {
             sortActive = sort[i].id;
             this.sortActive=sortActive
           }
-		  list=JSON.parse(list);
           for (let j = 0; j < list.length; j++) {
             let label = list[j].label;
             let labelArray = []; // let pic = 'http://www.theheavens.com.cn/HotelService/Image/' + appId + '/icon/1112.jpg';
-
-            let pic = 'http://121.37.210.175:8001/image/' + appId + '/icon/' + list[j].id + '.jpg';
 
             if (label) {
               labelArray = label.split(',');
@@ -1219,7 +1214,6 @@ export default {
             }
 
             list[j].labelArray = labelArray;
-            list[j].pic = pic;
             list[j].discount = discount;
           }
 
@@ -1244,7 +1238,6 @@ export default {
                 let orderHeight = (res.windowHeight - 466 * px) * rpx;
 
                 that.orderHeight= orderHeight
-
                 for (let k = 0; k < goodsList.length; k++) {
                   goodsNum[k] = [];
 
@@ -1253,12 +1246,12 @@ export default {
                   } else {
                     scrollArr[k] = Math.floor(scrollArr[k - 1] + goodsList[k - 1].length * 235 * px + 94 * px); // 每个分类的高度
                   }
-
+				  console.log(k);
                   for (let j = 0; j < goodsList[k].length; j++) {
                     // 初始化商品数组
                     goodsNum[k][j] = 0;
-
-                    if (k == goodsList.length - 1 && j == goodsList[k].length - 1) {
+                    if ( j == goodsList[k].length - 1) {
+						console.log(sort);
                         that.sort= sort,
                         that.goods= goodsList,
                         that.sortGoodsNum= sortGoodsNum,
@@ -1301,7 +1294,7 @@ export default {
           title: '加载中...'
         });
         uni.request({
-          url: prefix + 'Catering/GetItemGroupAboutClient',
+          url: prefix + 'MCC/GetItemGroupAboutClient',
           data: {
 			openid:openid,
 			appid:appId,
@@ -1312,24 +1305,30 @@ export default {
           method: 'post',
           success: function (res) {
             console.log('food.js->getItemGroupAboutClient GetItemGroupAboutClient result:', res);
-
             if (res.data.errCode == 0) {
               let sort = res.data.data;
+			  let reg=/[^\u4E00-\u9FA5]/g;
+			  sort.forEach(item=>{
+				  if(item.name.match(reg)){
+					 item.name=item.name.replace(reg,'');
+				  }
+			  })
+			  console.log(sort);
               uni.setStorageSync('sort', sort);
               let goodsList = [];
-
+			  that.sort=sort;
               for (let i = 0; i < sort.length; i++) {
                 let list = sort[i].list;
                 if (i == 0) {
                   sortActive = sort[i].id;
                   that.sortActive= sortActive
                 }
+				
 				list=JSON.parse(list);
                 for (let j = 0; j < list.length; j++) {
                   let label = list[j].label;
                   let labelArray = []; // let pic = 'http://www.theheavens.com.cn/HotelService/Image/' + appId + '/icon/1112.jpg';
 
-                  let pic = 'http://121.37.210.175:8001/image/' + appId + '/icon/' + list[j].id + '.jpg';
 
                   if (label) {
                     labelArray = label.split(',');
@@ -1342,13 +1341,11 @@ export default {
                   }
 
                   list[j].labelArray = labelArray;
-                  list[j].pic = pic;
                   list[j].discount = discount;
                 }
 
                 goodsList.push(list); // console.log(goodsList);
-
-                if (i == sort.length - 1) {
+                if (i == (sort.length) - 1) {
                   let goodsNum = [];
                   let sortGoodsNum = [];
                   let scrollArr = [];
@@ -1356,32 +1353,29 @@ export default {
                   for (let j = 0; j < sort.length; j++) {
                     sortGoodsNum[j] = 0;
                   } // 初始化分类数组
-
-
+				  /////////////////////////////
+				  that.sortGoodsNum= sortGoodsNum;
                   uni.getSystemInfo({
                     success: function (res) {
                       let rpx = 750 / res.windowWidth; // 转成rpx使用的数字
 
                       let px = res.windowWidth / 750; // 转成rpx使用的数字
-
                       let orderHeight = (res.windowHeight - 466 * px) * rpx;
                       that.orderHeight= orderHeight
-
                       for (let k = 0; k < goodsList.length; k++) {
                         goodsNum[k] = [];
-
                         if (k == 0) {
                           scrollArr[k] = 0; // 每个分类的高度
                         } else {
                           scrollArr[k] = Math.floor(scrollArr[k - 1] + goodsList[k - 1].length * 235 * px + 94 * px); // 每个分类的高度
                         }
-
                         for (let j = 0; j < goodsList[k].length; j++) {
                           // 初始化商品数组
                           goodsNum[k][j] = 0;
-
-                          if (k == goodsList.length - 1 && j == goodsList[k].length - 1) {
-                            that.sort= sort;
+						  /* console.log(k);
+						  console.log(j); */
+                          if ( j == (goodsList[k].length - 1)) {
+							that.sort= sort;
                             that.goods= goodsList;
                             that.sortGoodsNum= sortGoodsNum;
                             that.goodsNum= goodsNum;
@@ -1392,7 +1386,6 @@ export default {
                       }
                     }
                   });
-
                   if (uni.getStorageSync('goodsInfo')) {
                     let goodsInfo = uni.getStorageSync('goodsInfo'); // console.log(goodsInfo);
 
@@ -1412,7 +1405,6 @@ export default {
                       // 商品数量
                     this.sortGoodsNum= goodsInfo.sortGoodsNum; // 分类的商品总数
                   }
-
                   uni.hideLoading();
                   that.pageLoad1= true
                 }
@@ -1450,7 +1442,7 @@ export default {
       console.log(openid);
       console.log(point);
       uni.request({
-        url: prefix + 'Catering/GetTransact',
+        url: prefix + 'MCC/GetTransact',
         data: {
           appid: appId,
           id: openid,
@@ -1504,7 +1496,7 @@ export default {
       let openid = this.openid;
       let appId = this.appId;
       uni.request({
-        url: prefix + 'Catering/GetBanner',
+        url: prefix + 'MCC/GetBanner',
         data: {
 		  appid:appId,
           id: openid,
@@ -1512,17 +1504,19 @@ export default {
 		  clienttype:1
         },
         method: 'post',
-        dataType: 'json',
         success: function (res) {
+			console.log(res);
           if (res.data.status == 0) {
-            let imgUrls = res.data.data;
-
-            for (let i = 0; i < imgUrls.length; i++) {
+			  let imgUrls = res.data.data;
+            /* let imgUrls = res.data.data; */
+            /* for (let i = 0; i < imgUrls.length; i++) {
               //imgUrls[i].name = 'http://www.theheavens.com.cn/HotelService/Image/' + appId + '/' + imgUrls[i].name ;
               imgUrls[i].name = 'http://121.37.210.175:8001/image/' + appId + '/' + imgUrls[i].name;
             }
             that.imgUrls= imgUrls;
+			console.log(that.imgUrls); */
             that.currentSwiper= 0;
+			that.imgUrls= imgUrls;
             that.pageLoad2= true;
           }
         }
@@ -1535,7 +1529,7 @@ export default {
       let openid = this.openid;
       let appId = this.appId;
       uni.request({
-        url: prefix + 'Account/About',
+        url: prefix + 'MCC/About',
         data: {
           id: openid,
 		  openid:openid,
@@ -1723,8 +1717,13 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
+.order .order-left .sort-item text{
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+
 .order .order-left .sort-item.active {
   background-color: #fff;
   font-weight: 700;
@@ -1922,7 +1921,7 @@ export default {
   z-index: 999;
   width: 100%;
   height: 102rpx;
-  background-color: #C7A86D;
+  background-color: #69a6d2;
   display: flex;
   align-items: center;
 }
