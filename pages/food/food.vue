@@ -365,10 +365,10 @@ export default {
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: function () {
     //--------------------------------------------------------------------------
     // 2020-05-27 22:13:00 增加通过微信扫描带参数的微信二维码的功能，取到的信息为“销售点*帐单号”
-    console.log('food.js->onLoad', options.scene); //wx.setStorageSync('account', '')
+    /* console.log('food.js->onLoad', options.scene); //wx.setStorageSync('account', '')
 	console.log(options);
    if (options.scene != null) {
       // undefined
@@ -378,19 +378,19 @@ export default {
 	  console.log(account1);
       if (account1 != null) uni.setStorageSync('account', account1);
       if (point1 != null) uni.setStorageSync('point', point1);
-    } //--------------------------------------------------------------------------
-
+    } //-------------------------------------------------------------------------- */
+	let point = uni.getStorageSync('point');
+    let account = uni.getStorageSync('account');
     let appId = uni.getStorageSync('appId');
     let openId = uni.getStorageSync('openId');
 	this.appId=appId;
 	this.openid=openId;
     let register = uni.getStorageSync('register');
-    let point = uni.getStorageSync('point');
-    let account = uni.getStorageSync('account'); //console.log('appId',appId)
-    //console.log('openId',openId)
-    //console.log('register',register)
-    //console.log('point',point)
-    //console.log('account',account)
+	console.log('appId',appId)
+    console.log('openId',openId)
+    console.log('register',register)
+    console.log('point',point)
+    console.log('account',account)
     console.log('Result:', appId === '' || openId === '' || register === '');
 	if (point=='' || account==''){
 		this.isBindingBill(appId, openId, point, account);

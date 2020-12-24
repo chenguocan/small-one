@@ -142,7 +142,7 @@
 	
 		},
 		onShow() {
-			uni.showToast({
+/* 			uni.showToast({
 				title:'暂未授权',
 				icon:'none',
 				duration:1500,
@@ -151,7 +151,7 @@
 				uni.switchTab({
 					url:'index',
 				})
-			},1500);
+			},1500); */
 			this.changeType();
 			this.date1 = this.getDate();
 			this.date2 = this.getDate();
@@ -494,9 +494,6 @@
 					}
 					that.array = array;
 					that.arrayId = arrayId;
-					console.log(that.array);
-					console.log(that.arrayId);
-					console.log(that.items);
 					// console.log('this.item', this.items);
 			}
 		}
