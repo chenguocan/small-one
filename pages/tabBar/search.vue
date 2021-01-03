@@ -29,7 +29,7 @@
 						<!-- <input class="number" type="number" placeholder="请输入人数"  v-on:input="test($event)"/> -->
 					</view>
 				</view>
-				<view class="box">
+				<!-- <view class="box">
 					<view class="label_name">
 						来店日期:
 					</view>
@@ -43,19 +43,19 @@
 							<view>{{time1}}</view>
 						</picker>
 					</view>
-				</view>
+				</view> -->
 				
-				<view class="box">
-					<view class="label_name">
+				<!-- <view class="box"> -->
+					<!-- <view class="label_name">
 						{{timeType===0?'入住天数:':'离店日期:'}}
-					</view>
-					<view class="end">
+					</view> -->
+					<!-- <view class="end">
 						<picker class="start-picker" mode="date" v-if="timeType===1" :value="stopDate"  @change="stopChange">
 							<view class="title">{{stopDate}}</view>
 						</picker>
 						<picker class="end-picker" v-else-if="timeType===0" @change="bindEndChange" :value="endTimeIndex" :range="endTimeArr">
 							<text class="number">{{endTimeArr[endTimeIndex]}}</text><text>天</text>
-						</picker>
+						</picker> -->
 						
 						
 						
@@ -65,7 +65,7 @@
 						<!-- <picker mode="date" :value="date2" :start="startDate" :end="endDate" @change="bindDate2Change">
 							<view class="title">{{date2}}</view>
 						</picker> -->
-					</view>
+					<!-- </view> -->
 					<!-- 		<picker class="end-picker" v-if="current==0" @change="bindEndChange" :value="endTimeIndex" :range="endTimeArr">
 								<view class="number">{{endTimeArr[endTimeIndex]}}</view>
 							</picker> 
@@ -78,12 +78,23 @@
 							<view>{{time2}}</view>
 						</picker>
 					</view> -->
+				<!-- </view> -->
+				<view class="box">
+					<view class="label_name" >
+						入住时间:
+					</view>
+					<view class="start" @click='calshow=true'>
+						{{date1}}至{{stopDate}}
+					</view>
 				</view>
 			</view>
 		</view>
 		<view class="button" @click="sumbit">
 			预定
 		</view>
+		<u-calendar :min-date="minDate" :max-date="maxDate" @change="changeDate" v-model="calshow" :mode="mode" :start-text="startText" :end-text="endText" >
+			
+		</u-calendar>
 	</view>
 </template>
 
@@ -105,6 +116,9 @@
 				endMonth:'',
 				endDay:'', */
 				title: 'picker',
+				startText:'入住',
+				endText:'离店',
+				mode:'range',
 				array: [],
 				arrayId: [], // 存储人数数组的id
 				endTimeArr: [], // 结束时间数组
@@ -133,13 +147,16 @@
 				],
 				current: 0,
 				stop:'',
+				calshow:false,
+				maxDate:'2050-1-1',
+				minDate:'2050-1-1', 
 			}
 		},
 		async onLoad() {
 			await this.getRoomType();
 			this.getRoomCycle();
 			this.changeType()
-	
+			this.minDate=dayjs().format('YYYY-MM-DD') 
 		},
 		onShow() {
 /* 			uni.showToast({
@@ -176,6 +193,11 @@
 			}
 		},
 		methods: {
+			changeDate(e){
+				this.date1=e.startDate;
+				this.stopDate=e.endDate;
+				console.log(e)
+			},
 			//展示Picker
 			//更换类型
 			toggleType(current,index){
@@ -567,7 +589,7 @@
 		text-align: center;
 		/* border: 1px solid black; */
 		height: 45rpx;
-		width: 246rpx;
+		width: 300rpx;
 		margin-left: 45rpx;
 		background: #F1F2F2;
 		border-radius: 7rpx;
@@ -593,7 +615,7 @@
 		/* border: 1px solid #000000; */
 		/* z-index: 7; */
 		height: 47rpx;
-		width: 246rpx;
+		width: 300rpx;
 		margin-left: 45rpx;
 		background: #F1F2F2;
 		border-radius: 7rpx;

@@ -157,7 +157,7 @@
     </view>
     <!-- 底部购物车 -->
     <view class="footer" v-if="plateActive==0">
-      <image @click="onShowCart" src="/static/image/food/buy.png"></image>
+      <image @click="toShowCard(totalPrice)" src="/static/image/food/buy.png"></image>
       <text class="num" :hidden="totalGoodsNum==0">{{totalGoodsNum}}</text>
       <view class="price-count" v-if="!totalPrice">未选购商品</view>
       <view class="price-count" v-else>￥<text>{{totalPrice}}</text></view>
@@ -481,8 +481,19 @@ export default {
     this.accountAbout();
     if (this.isBinding) this.getTransact();
   },
+  
 
   methods: {
+	  /**
+	   * 显示购物车
+	   */
+	  toShowCard(price){
+		  if(price===0){
+			  
+		  }else{
+			  this.onShowCart();
+		  }
+	  },
     /**
      * 扫码
      */
