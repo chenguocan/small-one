@@ -5,9 +5,9 @@
 			<view class="search_icon">
 			</view>
 		</view>
-		<view class="swiper_view" @click="xxx">
+		<view class="swiper_view" >
 			<swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration">
-				<swiper-item v-for="(item,index) in bannerList" :key="index" >  <!-- @click='bannerDetail(item)' -->
+				<swiper-item v-for="(item,index) in bannerList" :key="index" @click='bannerDetail(item)' >  <!-- @click='bannerDetail(item)' -->
 						<image class="image-item" :src="item"></image>
 				</swiper-item>
 			</swiper>
@@ -17,11 +17,11 @@
 			<view class="big-title">
 				<text class="title">{{aboutList.title}}</text>
 				<text class='sub-title'>{{aboutList.sub_title}}</text>
-				<!-- <navigator hover-class="none" class='nav-img' url="../index/richText"> -->
-				<view class='nav-img' @click='xxx'>
-					<image :src="aboutList.image" class='about-us-img'></image>
-				</view>		
-				<!-- </navigator> -->
+				<navigator hover-class="none" class='nav-img' url="../index/richText">
+					<view class='nav-img' >
+						<image :src="aboutList.image" class='about-us-img'></image>
+					</view>		
+				</navigator>
 				
 				<!-- <swiper class="aboutSwiper" :autoplay="autoplay" :interval="interval" :duration="duration">
 					<swiper-item v-for="(item,index) in aboutList.banner" :key="index" >
@@ -39,9 +39,8 @@
 				<text class="title">{{showList.title}}</text>
 				<text class="sub-title">{{showList.sub_title}}</text>
 			</view>
-<!-- 			<navigator hover-class="none"  :url="'../index/showDetails?id=' + item.id" class="list_item" v-for="(item,index) in list" :key="index"> -->
-			<view class="list_item" v-for="(item,index) in list" :key="index">
-				<image class="img_item" :src="item.url" @click='xxx'></image>
+			<navigator hover-class="none"  :url="'../index/showDetails?id=' + item.id" class="list_item" v-for="(item,index) in list" :key="index">
+				<image class="img_item" :src="item.url" ></image>
 				<view class="title_item">
 					<view class="title">
 						{{item.title}}
@@ -50,8 +49,8 @@
 						{{item.subTitle}}
 					</view>
 				</view>
-			</view>
-<!-- 			</navigator> -->
+	
+			</navigator>
 		</view>
 	</view>
 </template>

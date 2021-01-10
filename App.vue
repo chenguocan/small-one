@@ -44,22 +44,22 @@
 		},
 		onShow: function() {
 			// console.log('App Show')
-			if(uni.getStorageSync('hide')){
+			/* if(uni.getStorageSync('hide')){
 				if(uni.getStorageSync('account') && uni.getStorageSync('point'));
 				setTimeout(function(){
 					uni.switchTab({
 						url:`/pages/food/food`,
-						/* url:`/pages/food/food?scene=${scene}` */
+						
 									fail: (err) => {
 										console.log(err);
 									}
 					})
 				},0)
-			}
+			} */
 		},
 		onHide: function() {
-			console.log('123');
-			uni.setStorageSync('hide',true);
+			/* console.log('123');
+			uni.setStorageSync('hide',true); */
 			// console.log('App Hide')
 		},
 		methods: {
@@ -84,7 +84,9 @@
 							code: code
 						},
 					})
+					
 					if(res2){
+						console.log('openid');
 						console.log(res2);
 						if (res2.data.errCode == 0) {
 							const resData = res2.data.data;

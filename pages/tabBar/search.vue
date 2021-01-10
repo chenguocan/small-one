@@ -84,7 +84,7 @@
 						入住时间:
 					</view>
 					<view class="start" @click='calshow=true'>
-						{{date1}}至{{stopDate}}
+						{{date1}}&nbsp;至&nbsp;{{stopDate}}
 					</view>
 				</view>
 			</view>
