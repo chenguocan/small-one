@@ -8,7 +8,6 @@
 			"style": {
 				"navigationBarTitleText": "首页"
 				// "navigationStyle": "custom"
-				
 			}
 		}, {
 			"path": "pages/reserve/reserve",
@@ -22,13 +21,11 @@
 			"style": {
 				"navigationBarTitleText": "我的"
 			}
-			// "style": {
-			// 	
-			// }
+
 		}, {
 			"path": "pages/user/login",
 			"style": {
-				"navigationBarTitleText": "登陆"
+				"navigationBarTitleText": "授权登录"
 			}
 		}, {
 			"path": "pages/reserve/product",
@@ -63,73 +60,97 @@
 			"path": "pages/order/orderList",
 			"style": {
 				"navigationBarTitleText": "订单列表"
-
 			}
 		}, {
-            "path" : "pages/index/showDetails",
-            "style" : {
+			"path": "pages/index/showDetails",
+			"style": {
 				"navigationBarTitleText": "房间展示详情"
 			}
-        }, {
-            "path" : "pages/index/richText",
-            "style" : {
+		}, {
+			"path": "pages/index/richText",
+			"style": {
 				"navigationBarTitleText": "简介"
 			}
-        }, {
-            "path" : "pages/user/card",
-            "style" : {
+		}, {
+			"path": "pages/user/card",
+			"style": {
 				"navigationBarTitleText": "会员卡"
 			}
-        }, {
-            "path" : "pages/user/cardDetail",
-            "style" : {
+		}, {
+			"path": "pages/user/cardDetail",
+			"style": {
 				"navigationBarTitleText": "明细"
 			}
-        }, {
-            "path" : "pages/user/guard",
-            "style" : {
+		}, {
+			"path": "pages/user/guard",
+			"style": {
 				"navigationBarTitleText": "门禁管理"
 			}
-        }, {
-            "path" : "pages/user/message",
-            "style" : {
+		}, {
+			"path": "pages/user/message",
+			"style": {
 				"navigationBarTitleText": "消息列表"
 			}
-        }, {
-            "path" : "pages/user/messageDetail",
-            "style" : {
+		}, {
+			"path": "pages/user/messageDetail",
+			"style": {
 				"navigationBarTitleText": "消息详情"
 			}
-        }
-        ,{
-            "path" : "pages/user/lease",
-            "style" : {
+		}, {
+			"path": "pages/user/lease",
+			"style": {
 				"navigationBarTitleText": "我的订单"
 			}
-        }
-        ,{
-            "path" : "pages/user/leaseDetails",
-            "style" : {
+		}, {
+			"path": "pages/user/leaseDetails",
+			"style": {
 				"navigationBarTitleText": "预定账单详情"
 			}
-        }
-        ,{
-            "path" : "pages/index/bannerImage",
-            "style" : {
-                "navigationBarTitleText": "详情"
-            }
-            
-        },
+		}, {
+			"path": "pages/index/bannerImage",
+			"style": {
+				"navigationBarTitleText": "详情"
+			}
+
+		},
 		{
-		    "path" : "pages/food/food",
-		    "style" : {
-				"navigationBarBackgroundColor":"#69a6d2",
-		        "navigationBarTitleText": "餐饮"
-		    }
-		    
+			"path": "pages/food/food",
+			"style": {
+				"navigationBarBackgroundColor": "#69a6d2",
+				"navigationBarTitleText": "餐饮"
+			}
+
+		}, {
+			"path": "pages/shopOrder/shopOrder",
+			"style": {
+				"navigationBarTitleText": "",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/scan/scan",
+			"style": {
+				"navigationBarTitleText": "扫码",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/shop/shop",
+			"style": {
+				"navigationBarTitleText": "商城",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/recharge/recharge",
+			"style": {
+				"navigationBarTitleText": "会员充值",
+				"enablePullDownRefresh": false
+			}
+
 		}
-        ,{
-            "path" : "pages/shopOrder/shopOrder",
+	    ,{
+            "path" : "pages/xxxxxxx/xxxxxxx",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
@@ -138,19 +159,28 @@
             
         }
         ,{
-            "path" : "pages/scan/scan",
+            "path" : "pages/user/vipCard/vipCard",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "扫码",
+                "navigationBarTitleText": "会员卡",
                 "enablePullDownRefresh": false
             }
             
         }
         ,{
-            "path" : "pages/shop/shop",
+            "path" : "pages/search/search",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "商城",
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/user/vipCard/cardDetail/cardDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
             
@@ -162,38 +192,46 @@
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#DBF1E1"
 	},
+	"permission": {
+		"scope.userLocation": {
+			"desc": "获取你的位置信息...."
+		}
+	},
 	"tabBar": {
 		"color": "#313131",
 		"selectedColor": "#1678FF",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
-			"pagePath": "pages/tabBar/index",
-			"iconPath": "static/images/tab_icon_home_default.png",
-			"selectedIconPath": "static/images/tab_icon_home_selected.png",
-			"text": "首页"
+				"pagePath": "pages/tabBar/index",
+				"iconPath": "static/images/tab_icon_home_default.png",
+				"selectedIconPath": "static/images/tab_icon_home_selected.png",
+				"text": "首页"
 
-		},{
-			"pagePath": "pages/shop/shop",
-			"iconPath": "static/images/shop.png",
-			"selectedIconPath": "static/images/shop-active.png",
-			"text": "商城"
-		},{
-			"pagePath": "pages/tabBar/search",
-			"iconPath": "static/images/tab_icon_rent_default.png",
-			"selectedIconPath": "static/images/tab_icon_rent_selected.png",
-			"text": "预定"
-		},{
-			"pagePath": "pages/food/food",
-			"iconPath": "static/images/cook.png",
-			"selectedIconPath": "static/images/cook-active.png",
-			"text": "餐饮"			
-		}, {
-			"pagePath": "pages/tabBar/user",
-			"iconPath": "static/images/tab_icon_user_default.png",
-			"selectedIconPath": "static/images/tab_icon_user_selected.png",
-			"text": "我的"
-		}]
+			}, {
+				"pagePath": "pages/shop/shop",
+				"iconPath": "static/images/shop.png",
+				"selectedIconPath": "static/images/shop-active.png",
+				"text": "商城"
+			}, {
+				"pagePath": "pages/search/search",
+				"iconPath": "static/images/tab_icon_rent_default.png",
+				"selectedIconPath": "static/images/tab_icon_rent_selected.png",
+				"text": "预定"
+			},
+			/* {
+						"pagePath": "pages/food/food",
+						"iconPath": "static/images/cook.png",
+						"selectedIconPath": "static/images/cook-active.png",
+						"text": "餐饮"			
+					}, */
+			{
+				"pagePath": "pages/tabBar/user",
+				"iconPath": "static/images/tab_icon_user_default.png",
+				"selectedIconPath": "static/images/tab_icon_user_selected.png",
+				"text": "我的"
+			}
+		]
 	},
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
@@ -235,5 +273,5 @@
 			"query": ""
 		}]
 	}
-	
+
 }

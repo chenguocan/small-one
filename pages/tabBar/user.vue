@@ -2,44 +2,35 @@
 	<view>
 		<view class="top">
 			<!-- <view class="pencil" @click="toSetting"></view> -->
-			<view class="email" @click="toEmail" v-if="msgNum>0">  <!-- @click="toEmail" -->
-				<text  class="num">{{msgNum}}</text>
+			<view class="email" @click="toEmail" v-if="msgNum>0">
+				<!-- @click="toEmail" -->
+				<text class="num">{{msgNum}}</text>
 			</view>
-			<view class="header" @click="toLogin"><!-- @click="toLogin" -->
+			<view class="header" @click="toLogin">
+				<!-- @click="toLogin" -->
 				<view class="headimg">
-					<u-avatar :src="userInfo.avatarUrl" ></u-avatar>
+					<u-avatar :src="userInfo.avatarUrl"></u-avatar>
 					<!-- <img :src="userInfo.avatarUrl" alt="" class='img'> -->
 				</view>
 				<view class="user_name">
-					<!-- <view class='vipCard'>
-						{{userInfo.avatarUrl ? '会员卡' : '点击登录'}}
-						<u-icon size="25"  color="#e5e6e6" name="arrow-right"></u-icon></view> -->
 					<view>
 						<text class='phone'>{{userInfo.avatarUrl ? userInfo.nickName : '立即登录'}}</text>
 					</view>
 					<text class="phone">{{userInfo.avatarUrl ? userInfo.phone : ''}}</text>
-					<view class='phone vip' v-if="is===true" @click='vipNav'>  <!-- @click='vipNav' -->
-					 我的会员卡
-					<u-icon size="25" class='rightIcon'  color="#f3f4f4" name="arrow-right"></u-icon>
-					</view>
+					<!-- <view class='phone vip' v-if="is===true" @click.stop='vipNav'>
+						我的会员卡
+						<u-icon size="25" class='rightIcon' color="#f3f4f4" name="arrow-right"></u-icon>
+					</view> -->
 				</view>
 				<view class="car-desc">{{membershipDescription}}</view>
 			</view>
 		</view>
 		<view class="navbar">
-			<!-- <view class='vipCard'>
-				<view class='level'>
-					<u-icon name='level' color="black"></u-icon>
-					<text >会员卡</text>
-				</view>
-				<view class='level'>
-					<text @click="getVip">查看领取</text>
-				</view>
-			</view> -->
 			<view class='navContent'>
 				<view class='xxx'>
-					<view class="bar" v-for="(item,index) in barList" :key="item.id" @click="toOrderList(index+1)">  <!-- @click="toOrderList(index+1)" -->
-						<view class='bar_view' :style="{background:item.image,'background-size':size}"></view>
+					<view class="bar" v-for="(item,index) in barList" :key="item.id" @click="toOrderList(index+1)">
+						<!-- @click="toOrderList(index+1)" -->
+						<view class='bar_view'> <i class="iconfont" :class="item.icon"></i></view>
 						<view class="bar_name">
 							{{item.name}}
 						</view>
@@ -47,19 +38,37 @@
 				</view>
 			</view>
 		</view>
+
+		<view class="navbar">
+			<view class='navContent'>
+				<view class='card'>
+					<view class="card-item" v-for="(item,index) in cardList" :key="index" @click="toCard(index)">
+						<view class="card-icon">
+							<i class="iconfont" :class="item.icon" :style="{color:item.color}"></i>
+						</view>
+						<view class="card-detail">
+							<text class="name" :style="{color:item.color}">{{item.name}}</text>
+							<text class="num">{{item.num}}</text>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
 		<view class="floored">
-			<view class="floored_item" v-for="(item,index) in list" :key="index"  @click="toFloored(item.index)"> <!-- @click="toFloored(item.index)" -->
+			<view class="floored_item" v-for="(item,index) in list" :key="index" @click="toFloored(item.index)">
+				<!-- @click="toFloored(item.index)" -->
 				<view class="floored_view">
-					<view class="floored_img" :style="{background:item.image,'background-size':size}">
+					<view class="floored_img">
+						<i class="iconfont" :class="item.icon"></i>
 					</view>
 				</view>
 				<view class="floored_name">
 					{{item.name}}
-					<u-icon size="30"  color="black" name="arrow-right"></u-icon>
+					<u-icon size="30" color="black" name="arrow-right"></u-icon>
 				</view>
 			</view>
 		</view>
-		<u-popup v-model="showPopup" mode="center" >
+		<u-popup v-model="showPopup" mode="center">
 			<image :src="lockImage" class="lock-image"></image>
 		</u-popup>
 	</view>
@@ -74,37 +83,53 @@
 				register: '', // 是否注册
 				userInfo: {}, // 用户信息
 				size: "cover",
-				is:false,
-				usableRoomList:[],
+				is: false,
+				usableRoomList: [],
 				barList: [{
 						name: "待付款",
-						image: "url('https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/pay1.png') no-repeat",
+						icon: 'icon-chaoshiweifukuan',
 						index: 1
 					},
 					{
 						name: "已付款",
-						image: "url('https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/pay2.png') no-repeat",
+						icon: 'icon-yifukuandingdan',
 						index: 2
 					},
 					{
 						name: "执行中",
-						image: "url('https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/incomplete.png') no-repeat",
+						icon: "icon-zhihangzhong",
 						index: 3
 					},
 					{
 						name: "已完成",
-						image: "url('https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/complete.png') no-repeat",
+						icon: "icon-yiwancheng2",
 						index: 4
 					}
 				],
+				cardList:[{
+					name:'会员卡',
+					icon:'icon-dingdan',
+					color:'#41cdff',
+					num:'0',
+				},{
+					name:'积分',
+					icon:'icon-dingdan',
+					color:'',
+					num:'0',
+				},{
+					name:'优惠券',
+					icon:'icon-dingdan',
+					color:'#ff6f6f',
+					num:'0',
+				}],
 				list: [{
 						name: "我的订单",
-						image: "url('https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/lease.png') no-repeat",
+						icon: "icon-dingdan",
 						index: 0
 					},
 					{
 						name: "门禁管理",
-						image: "url('https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/door.png') no-repeat",
+						icon: "icon-menjin",
 						index: 1
 					},
 					/* {
@@ -114,12 +139,12 @@
 					}, */
 					{
 						name: "我的房卡",
-						image: "url('https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/Notice.png') no-repeat",
+						icon: "icon-zhinengmensuo",
 						index: 4
 					},
 					{
 						name: "优惠券",
-						image: "url('https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/coupon.png') no-repeat",
+						icon: "icon-youhuiquan",
 						index: 3
 					}
 				],
@@ -129,17 +154,23 @@
 				membershipDescription: '', // 会员卡描述
 			}
 		},
-		async onShow(){
+		async onShow() {
 			await this.$onLaunched;
 			// this.loadUser();
 			let openId = this.openId = globalData.openid;
 			// #ifdef MP-WEIXIN
 			this.getAccount();
 			// #endif
-			
+
 			/////////////////////////////////
 			/* this.getNewInfoCount(); */
 			this.register = globalData.register;
+			if (!this.register) {
+				uni.reLaunch({
+					url: '/pages/user/login',
+
+				})
+			}
 			/* this.getLockAuthorizeRoom(); */
 			//////////////////////////////////
 			// this.getOpenLock();
@@ -147,24 +178,36 @@
 			// if (openId) this.getAccount();
 		},
 		methods: {
-			xxx(){
+			toCard(index){
+				console.log(index);
+				if(index===2){
+					uni.navigateTo({
+						url:'../xxxxxxx/xxxxxxx'
+					})
+				}else if(index===0){
+					uni.navigateTo({
+						url: "../user/vipCard/vipCard"
+					})
+				}
+			},
+			xxx() {
 				return uni.showToast({
-					title:'未授权用户',
-					icon:'none'
+					title: '功能暂未开放',
+					icon: 'none'
 				})
 			},
 			/**
 			 * 跳转会员卡界面
 			 */
-			vipNav(){
+			vipNav() {
 				uni.navigateTo({
-					url:"../user/card"
+					url: "../user/card"
 				})
 			},
 			/**
 			 * 获取会员卡描述
 			 */
-			getMembershipDescription () {
+			getMembershipDescription() {
 				const that = this;
 				const openId = this.openId;
 				const appId = globalData.appid;
@@ -174,7 +217,7 @@
 					data: {
 						appid: appId,
 						openid: openId,
-						clienttype:1,
+						clienttype: 1,
 					},
 					success(res) {
 						console.log('GetMembershipDescription ', res);
@@ -189,7 +232,7 @@
 					}
 				})
 			},
-			
+
 			/**
 			 * 获取开锁二维码
 			 */
@@ -197,24 +240,24 @@
 				const that = this;
 				const openId = this.openId;
 				const appId = globalData.appid;
-				if(that.usableRoomList.length===0){
+				if (that.usableRoomList.length === 0) {
 					return uni.showModal({
-						title:'温馨提示',
-						content:'没有授权',
-						showCancel:false,
+						title: '温馨提示',
+						content: '没有授权',
+						showCancel: false,
 					})
 				}
- 				uni.request({ //提交用户信息获取用户id
+				uni.request({ //提交用户信息获取用户id
 					url: globalData.api + '/MCM/OpenLock',
 					method: 'POST',
 					data: {
 						appid: appId,
 						openid: openId,
-						clienttype:1,
+						clienttype: 1,
 					},
 					success(res) {
 						console.log('OpenLock', res);
-						
+
 						if (res.data.errCode == 0) {
 							that.lockImage = res.data.data;
 							that.showPopup = true;
@@ -225,14 +268,14 @@
 							})
 						}
 					}
-				}) 
+				})
 			},
-			
-			
+
+
 			/**
 			 * 获取可授权开锁的房间列表
 			 */
-			getLockAuthorizeRoom () {
+			getLockAuthorizeRoom() {
 				let that = this;
 				const name = that.nameVal;
 				uni.request({
@@ -241,9 +284,9 @@
 					data: {
 						appid: globalData.appid,
 						openid: globalData.openid,
-						clienttype:1,
+						clienttype: 1,
 					},
-					success: function (res) {
+					success: function(res) {
 						console.log('GetLockAuthorizeRoom', res);
 						if (res.data.errCode == 0) {
 							const data = res.data.data;
@@ -277,16 +320,18 @@
 					data: {
 						appid: appId,
 						openid: openId,
-						clienttype:1,
-						
+						clienttype: 1,
+
 					},
 					success(res) {
 						console.log('getAccount', res);
 						if (res.data.errCode == 0) {
 							const resData = res.data.data;
 							that.userInfo = resData;
+							globalData.avatar = resData.avatarUrl;
+
 							globalData.userInfo = resData;
-							that.is=true;
+							that.is = true;
 							/////////////////////////
 							/* that.getMembershipDescription(); */
 						} else {
@@ -296,7 +341,7 @@
 					}
 				})
 			},
-			
+
 			getNewInfoCount() {
 				const that = this;
 				const openId = this.openId;
@@ -307,7 +352,7 @@
 					data: {
 						appid: appId,
 						openid: openId,
-						clienttype:1,
+						clienttype: 1,
 					},
 					success(res) {
 						console.log('GetNewInfoCount', res);
@@ -318,7 +363,7 @@
 					}
 				})
 			},
-			
+
 			/**
 			 * 去登录
 			 */
@@ -329,30 +374,38 @@
 					})
 				}
 			},
-			
+
 			/**
 			 * 去邮箱
 			 */
 			toEmail() {
-				if (this.register) {
-					uni.navigateTo({
-						url: '../user/message'
-					})
-				} else {
-					uni.showModal({
-						title: '提示',
-						content: '请先登录后操作',
-						success: function (res) {
-							if (res.confirm) {
-								uni.navigateTo({
-									url: '../user/login'
-								})
+				let temindex = globalData.powerList[0];
+				if (temindex === true) {
+					if (this.register) {
+						uni.navigateTo({
+							url: '../user/message'
+						})
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: '请先登录后操作',
+							success: function(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url: '../user/login'
+									})
+								}
 							}
-						}
+						})
+					}
+				} else {
+					uni.showToast({
+						icon: 'none',
+						title: '功能暂未开放',
 					})
 				}
 			},
-			
+
 			/**
 			 * 去设置
 			 */
@@ -368,76 +421,93 @@
 					})
 				}
 			},
-			
+
 			toFloored(index) {
 				console.log(index);
-				if (this.register) {
-					if (index == 3) {
-						uni.navigateTo({
-							url: "../coupon/coupon"
-						})
-					} else if (index == 2) {
-						uni.navigateTo({
-							url: "../user/card"
-						})
-					} else if (index == 1) {
-						uni.navigateTo({
-							url: "../user/guard"
-						})
-					} else if (index == 0) {
-						uni.navigateTo({
-							url: "../user/lease"
-						})
-					} else if (index == 4) {
-						/* this.getOpenLock(); */
-						uni.navigateToMiniProgram({
-							appId:'wxf7dd6d6f511d53dc',
-							success(res){
-								console.log("打开成功")
-							},
-							fail(err){
-								uni.showToast({
-									title:err,
-								})
+				let temindex = globalData.powerList[0];
+				if (temindex === true) {
+					if (this.register) {
+						if (index == 3) {
+							uni.navigateTo({
+								url: "../coupon/coupon"
+							})
+						} else if (index == 2) {
+							uni.navigateTo({
+								url: "../user/card"
+							})
+						} else if (index == 1) {
+							uni.navigateTo({
+								url: "../user/guard"
+							})
+						} else if (index == 0) {
+							uni.navigateTo({
+								url: "../user/lease"
+							})
+						} else if (index == 4) {
+							/* this.getOpenLock(); */
+							uni.navigateToMiniProgram({
+								appId: 'wxf7dd6d6f511d53dc',
+								success(res) {
+									console.log("打开成功")
+								},
+								fail(err) {
+									uni.showToast({
+										title: err,
+									})
+								}
+							})
+						}
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: '请先登录后操作',
+							success: function(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url: '../user/login'
+									})
+								}
 							}
 						})
 					}
 				} else {
-					uni.showModal({
-						title: '提示',
-						content: '请先登录后操作',
-						success: function (res) {
-							if (res.confirm) {
-								uni.navigateTo({
-									url: '../user/login'
-								})
-							}
-						}
+					uni.showToast({
+						icon: 'none',
+						title: '功能暂未开放',
 					})
 				}
-				
+
 			},
 			toOrderList(index) {
-				if (this.register) {
-					uni.navigateTo({
-						url: "../order/orderList?state=" + index
-					})
-				} else {
-					uni.showModal({
-						title: '提示',
-						content: '请先登录后操作',
-						success: function (res) {
-							if (res.confirm) {
-								uni.navigateTo({
-									url: '../user/login'
-								})
+				let temindex = globalData.powerList[0];
+				if (temindex === true) {
+					if (this.register) {
+						uni.navigateTo({
+							url: "../order/orderList?state=" + index
+						})
+					} else {
+						uni.showModal({
+							title: '提示',
+							content: '请先登录后操作',
+							success: function(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url: '../user/login'
+									})
+								}
 							}
-						}
+						})
+					}
+				} else {
+					uni.showToast({
+						icon: 'none',
+						title: '功能暂未开放',
 					})
 				}
-				
+
+
 			},
-			loadUser(){
+			loadUser() {
 				this.$request
 					.post("/MCM/GetMembershipCard", {
 						header: {
@@ -445,7 +515,7 @@
 						},
 						data: {
 							appid: "wx9c6352d928983b70",
-							clienttype:1,
+							clienttype: 1,
 						},
 						dataType: 'json',
 						responseType: 'text'
@@ -454,14 +524,15 @@
 						this.user = res.data.data;
 					})
 			},
-			getVip(){
+			getVip() {
 				console.log("123123")
 				uni.showModal({
-					title:'提示',
-					content:'功能尚未开放',
-					showCancel:false,
+					title: '提示',
+					content: '功能尚未开放',
+					showCancel: false,
 				})
-			}
+			},
+
 		}
 	}
 </script>
@@ -469,7 +540,7 @@
 <style lang="less" scoped>
 	.top {
 		width: 100%;
-		height: 300rpx;
+		height: 250rpx;
 		display: flex;
 		align-items: center;
 		background: url(http://121.37.210.175:8001/image/wxc469315ccc0dee04/1a823f9e68f00002.jpg);
@@ -508,6 +579,7 @@
 		color: gray;
 		line-height: 38rpx;
 	}
+
 	/* .vipCard{
 		display: flex;
 		align-items: center;
@@ -515,10 +587,10 @@
 		font-size: 20px;
 		margin-bottom: 40rpx;
 	} */
-	.vipCard{
+	.vipCard {
 		display: flex;
 		justify-content: space-between;
-		color:white;
+		color: white;
 		height: 120rpx;
 		width: 500rpx;
 		background: url(https://img-u-4.51miz.com/preview/element/00/01/05/87/E-1058743-9EBF2547.jpg!/quality/90/unsharp/true/compress/true/format/jpg/fh/320) no-repeat;
@@ -527,23 +599,28 @@
 		margin: 0 auto;
 		transform: translateY(50%);
 	}
-	.level{
+
+	.level {
 		margin: 0 20rpx;
 	}
-	.phone{
+
+	.phone {
 		margin-left: 20rpx;
 		margin-bottom: 15rpx;
 		font-size: 12px;
 		color: rgba(242, 242, 242, 1.0);
 	}
-	.vip{
+
+	.vip {
 		display: flex;
 		align-items: center;
 		color: white;
 	}
-	.rightIcon{
+
+	.rightIcon {
 		margin-left: 80rpx;
 	}
+
 	.car-desc {
 		margin-top: 10rpx;
 		font-size: 23rpx;
@@ -552,7 +629,7 @@
 
 	.email {
 		position: absolute;
-		right:  30rpx;
+		right: 30rpx;
 		top: 56rpx;
 		z-index: 11;
 		width: 52rpx;
@@ -560,7 +637,8 @@
 		background: url("https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/email.png") no-repeat;
 		background-size: cover;
 	}
-	.email > .num {
+
+	.email>.num {
 		position: absolute;
 		top: -20rpx;
 		right: -20rpx;
@@ -574,7 +652,7 @@
 		border-radius: 50%;
 		background-color: #f00;
 	}
-	
+
 	.pencil {
 		position: absolute;
 		right: 120rpx;
@@ -587,13 +665,44 @@
 	}
 
 	///////////////////////////////
-	.navContent{
+	.navContent {
 		display: flex;
 		justify-content: center;
 		width: 100%;
-		
+
+		.card {
+			position: absolute;
+			display: flex;
+			height: 150rpx;
+			width: 90%;
+			background: white;
+			box-shadow: 2rpx 3rpx 10rpx #8f8f8f;
+			border-radius: 15rpx;
+			transform: translateY(-120%);
+			opacity: 0.9;
+			z-index: 1;
+			.card-item{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 100%;
+				width: 33.3%;
+				
+			}
+			.card-detail{
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				font-size: 21rpx;
+				.name{
+					font-weight: 700;
+				}
+			}
+		}
+
 	}
-	.xxx{
+
+	.xxx {
 		position: absolute;
 		align-items: center;
 		display: flex;
@@ -607,6 +716,7 @@
 		opacity: 0.9;
 		z-index: 1;
 	}
+
 	.navbar {
 		width: 100%;
 		height: 365rpx;
@@ -623,7 +733,9 @@
 	}
 
 	.bar_view {
-		display: block;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		width: 80rpx;
 		height: 82rpx;
 	}
@@ -639,42 +751,38 @@
 		display: flex;
 		background: white;
 		flex-wrap: wrap;
-		transform: translateY(-100rpx);
+		transform: translateY(-360rpx);
 	}
 
 	.floored_item {
 		display: flex;
-		
-		padding:0 30rpx;
+		padding: 0 30rpx;
 		align-items: center;
 		width: 100%;
-		
+
 	}
 
-	.floored_img {
-		height: 45rpx;
-		width: 45rpx;
-	}
+	.floored_img {}
 
-/* 	.floored_item:nth-of-type(2n-1) .floored_img {
+	/* 	.floored_item:nth-of-type(2n-1) .floored_img {
 		margin-left: 129rpx;
 	} */
 
 	.floored_name {
 		display: flex;
 		justify-content: space-between;
-		margin:0 20rpx;
-		padding:30rpx;
+		margin: 0 20rpx;
+		padding: 30rpx;
 		width: 100%;
 		width: 100%;
 		font-size: 16px;
 		border-bottom: 1rpx solid #f5f5f5;
 	}
 
-/* 	.floored_item:nth-of-type(2n-1) .floored_name {
+	/* 	.floored_item:nth-of-type(2n-1) .floored_name {
 		margin-left: 129rpx;
 	} */
-	
+
 	.lock-image {
 		width: 500rpx;
 		height: 500rpx;

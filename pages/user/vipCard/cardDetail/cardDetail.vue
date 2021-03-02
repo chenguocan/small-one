@@ -13,9 +13,9 @@
 							<!-- <view class="card-type">{{cardInfo.card_name}}</view> -->
 						</view>
 					</view>
-					<!-- <view class="more">
-						更多
-					</view> -->
+					<view class="more">
+						<u-icon name="info-circle"  size="36"></u-icon>
+					</view>
 				</view>
 				<!-- 卡号 -->
 				<view class="card-no">
@@ -27,12 +27,12 @@
 				<!-- 卡余额 -->
 				<view class="card-oper-item" @click="toSurplus">
 					<view class="title">余额</view>
-					<view class="number">{{cardInfo.money}}</view>
+					<view class="number">{{cardInfo.amount}}</view>
 				</view>
 				<!-- 卡积分 -->
 				<view class="card-oper-item" @click="toRecord(2,0,'积分明细')">
 					<view class="title">积分</view>
-					<view class="number" >{{cardInfo.score}}</view>
+					<view class="number">{{cardInfo.score || 0}}</view>
 				</view>
 			</view>
 		</view>
@@ -124,10 +124,7 @@
 					<u-tabs :list="tablist" :is-scroll="false" :current="current" @change="tabchange"></u-tabs>
 				</view> -->
 				<view class="card-detail">
-					<view style="width: 450rpx; ">
-						<vtabs v-model="current" :scroll="true" :tabs="tablist" @change="tabchange">
-						</vtabs>
-					</view>
+	
 					<!-- <u-radio-group class="pay-radio" v-model="payvalue">
 						<u-radio @change="payChange(index)" v-for="(item, index) in payList" :key="index" :name="item.name">
 							{{item.name}}
@@ -137,10 +134,10 @@
 					</tki-qrcode>
 					<view class="card-msg">
 						<view>
-							卡号:{{payList[index].id || ''}}
+							卡号:{{payList.id || ''}}
 						</view>
 						<view>
-							余额:{{payList[index].amount || '0'}}
+							余额:{{payList.amount || '0'}}
 						</view>
 					</view>
 				</view>
@@ -171,18 +168,20 @@
 				list: [],
 				val: {},
 				payvalue: '白金卡',
-				payList: [],
+				payList: {},
 				index: 0,
 				tablist: [],
 				current: 0,
 				isdestory:false,
+				currentId:'',
 			}
 		},
 
 		onLoad(options) {
-			
+			this.currentId=options.id;
 			this.avatar = globalData.avatar;
-			this.getMembershipCard();
+			/* this.getMembershipCard(); */
+			this.getPayMsg()
 		},
 
 		methods: {
@@ -225,6 +224,7 @@
 
 			},
 			async getPayMsg() {
+				let that=this;
 				let [err, res] = await uni.request({
 					url: globalData.api + '/MCM/GetMembershipPay',
 					method: 'post',
@@ -232,38 +232,21 @@
 						appid: globalData.appid,
 						openid: globalData.openid,
 						clienttype: 1,
-						uid: globalData.uid
+						uid: globalData.uid,
+						id:this.currentId
 					}
 				})
 				console.log('/MCM/GetMembershipPay');
 				console.log(res);
 				if (res.data.errCode === 0) {
-					let resData = res.data.data;
-					let payList = [{
-						name: '钻石卡',
-						id: '00001',
-						amount: '100'
-					}, {
-						name: '黑金卡',
-						id: '00002',
-						amount: '100'
-					}, {
-						name: '黑金卡',
-						id: '00002',
-						amount: '100'
-					}, {
-						name: '黑金卡',
-						id: '00002',
-						amount: '100'
-					}, {
-						name: '黑金卡',
-						id: '00002',
-						amount: '100'
-					}]
-					payList.push(resData[0]);
-					this.payList = resData;
+					let resData = res.data.data[0];
+					that.cardInfo = resData;
+					that.cardInfo.amount = resData.amount.toFixed(2);
+					that.payList=that.cardInfo
+					console.log(that.cardInfo);
+					/* let resData = res.data.data;
 					let list=[];
-					this.payList = payList;
+					this.payList = resData;
 					this.payList.forEach(item => {
 						list.push(item.name);
 						item.amount = parseInt(item.amount).toFixed(2);
@@ -271,7 +254,7 @@
 					this.tablist=list;
 					console.log(list);
 					this.payvalue = this.payList[0].name;
-					this.val = this.payList[0].id;
+					this.val = this.payList[0].id; */
 				} else {
 					uni.showToast({
 						title: res.data.errMsg,
@@ -282,7 +265,7 @@
 			/*充值*/
 			recharge() {
 				uni.navigateTo({
-					url: '../recharge/recharge'
+					url: '../../../recharge/recharge'
 				})
 			},
 			/*人脸识别健身通道*/
@@ -309,12 +292,12 @@
 					return;
 				}
 				uni.navigateTo({
-					url: `./cardDetail?source=${source}&direction=${direction}&title=${title}`
+					url: `../../cardDetail?id=${this.currentId}&source=${source}&direction=${direction}&title=${title}`
 				})
 			},
 			toSurplus() {
 				uni.navigateTo({
-					url: `./cardDetail?source=1&direction=0&money=${this.cardInfo.money}&title=会员卡金额明细`
+					url: `../../cardDetail?source=1&direction=0&money=${this.cardInfo.money}&title=会员卡金额明细`
 				})
 			},
 			/**
@@ -329,7 +312,7 @@
 						appid: globalData.appid,
 						openid: globalData.openid,
 						clienttype: 1,
-						uid: globalData.uid
+						uid: globalData.uid,
 					},
 					success(res) {
 						console.log('getMembershipCard', res);
@@ -470,11 +453,8 @@
 			}
 
 			.more {
-				color: black;
 				margin-right: -30rpx;
 				padding: 5rpx 10rpx 5rpx 30rpx;
-				background: white;
-				border-radius: 10rpx 0 0 10rpx;
 				font-size: 24rpx;
 			}
 		}

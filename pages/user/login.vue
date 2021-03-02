@@ -28,14 +28,10 @@ export default {
 			check: false, // 按钮点击状态
 			phone: 0, // 手机号码
 			sessionKey: '', 
-			nav:'',
 		};
 	},
-	onLoad(options){
-		if(options.nav){
-			console.log(options);
-			this.nav=options
-		}
+	async onLoad(options){
+		
 	},
 	async onShow() {
 		await this.$onLaunched;
@@ -55,22 +51,19 @@ export default {
 			  // console.log(userInfo);
 			  // wx.setStorageSync('userInfo', res.detail.userInfo);
 			  that.register(userInfo); // 用户注册
-			  uni.switchTab({
-			  	url:'/pages/tabBar/index',
-			  })
 			}
 		},
 		/**
 		* 手机号授权
 		*/
 		bindgetphonenumber(res) {
-			console.log(globalData);
+			/* console.log(globalData); */
 			let that = this;
 			let encryptedData = res.detail.encryptedData;
 			let iv = res.detail.iv;
 			let sessionKey = globalData.sessionKey;
 			console.log(res);
-			console.log(sessionKey);
+			/* console.log(sessionKey); */
 			if (encryptedData && iv) { // 确认授权
 				if (sessionKey){
 					uni.showLoading({ 
@@ -119,7 +112,8 @@ export default {
 		register(info) {
 		    let that = this;
 		    let phone = that.phone;
-		    let openId = that.openId;
+		    let openId = globalData.openid;
+			console.log(openId);
 			let userInfo = info;
 		    let nickName = userInfo.nickName;
 		    let avatarUrl = userInfo.avatarUrl;
@@ -155,22 +149,12 @@ export default {
 					clienttype:1,
 					language:"CHN"
 				},
-				success(res) {
+				async success(res) {
 					console.log('register', res);
 					if (res.data.errCode == 0) {
 						globalData.userInfo = userInfo;
 						globalData.register = true;
-/* 						if(that.nav){
-							if(that.nav==='food'){
-								uni.switchTab({
-									url:'../food/food'
-								})
-							}
-						} */
-						uni.navigateBack({});
-						uni.showToast({
-						    title: '登录成功'
-						});
+						await that.login();
 					} else {
 						uni.showModal({
 							title: '提示',
@@ -184,6 +168,43 @@ export default {
 					console.log(err)
 				}
 		    })
+		},
+		//登录认证
+		async login(){
+			let that=this;
+			let [err,res]=await uni.request({
+				url:globalData.api+'/Base/Login',
+				method:'POST',
+				data:{
+					system:globalData.appid,
+					type:3,
+					company:6,
+					code:globalData.openid
+				}
+			})
+			if(res){
+				console.log('res');
+				console.log(res);
+				globalData.uid=res.data.data.uid;
+				if(res.data.errCode===0){
+					uni.switchTab({
+						url:'/pages/tabBar/index',
+					})
+					uni.showToast({
+					    title: '登录成功'
+					});
+				}else{
+					uni.showToast({
+						title:'认证失败',
+						icon:'none'
+					})
+				}
+			}else{
+				uni.showToast({
+					title:"请求失败",
+					icon:"none"
+				})
+			}
 		},
 	}
 };

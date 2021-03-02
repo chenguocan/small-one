@@ -6,21 +6,16 @@
 			<view class="card-info">
 				<!-- 用户卡类型板块 -->
 				<view class="user">
-					<view class="detail">
-						<image class="logo" :src="avatar"></image>
-						<view class="brand">
-							<view class="user-name">{{cardInfo.name}}</view>
-							<!-- <view class="card-type">{{cardInfo.card_name}}</view> -->
-						</view>
+					<image class="logo" :src="avatar"></image>
+					<view class="brand">
+						<view class="user-name" :style="{color:currentColor}">{{cardInfo.name}}</view>
+						<view class="card-type" :style="{color:currentColor}">{{cardInfo.card_name}}</view>
 					</view>
-					<!-- <view class="more">
-						更多
-					</view> -->
 				</view>
 				<!-- 卡号 -->
-				<view class="card-no">
+				<!-- <view class="card-no">
 					No.{{cardInfo.id}}
-				</view>
+				</view> -->
 			</view>
 			<!-- 卡操作：余额和积分 -->
 			<view class="card-oper">
@@ -32,131 +27,32 @@
 				<!-- 卡积分 -->
 				<view class="card-oper-item" @click="toRecord(2,0,'积分明细')">
 					<view class="title">积分</view>
-					<view class="number" >{{cardInfo.score}}</view>
+					<view class="number">{{cardInfo.score}}</view>
 				</view>
 			</view>
 		</view>
 		<!-- 功能列表 -->
-		<view class="detail-list">
-			<view class="record">
-				<view class="header">
-					<text class="title">费用管理</text>
-					<view class="line"></view>
+		<scroll-view flex scroll-y class="card-box"  @scrolltolower="refresh">
+			<view class="vipCard" v-for="(item,index) in payList" :key="index" @click="toDetail(item.id)">
+				<view class="vip-type" :style="{color:currentColor}">
+					{{item.type_name}}
 				</view>
-				<view class="record-list">
-					<view class="record-item" @click="pay()">
-						<i class="iconfont icon-icon_erweima"></i>
-						支付
-					</view>
-					<view class="record-item" @click="recharge()">
-						<i class="iconfont icon-huiyuankachongzhi"></i>
-						充值
-					</view>
-					<view class="record-item" @click="toRecord(1,-1,'充值记录')">
-						<i class="iconfont icon-chongzhijiluicon"></i>
-						充值记录
-					</view>
-					<view class="record-item" @click="toRecord(1,1,'消费记录')">
-						<i class="iconfont icon-diban-"></i>
-						消费记录
-					</view>
-					<view class="record-item" @click="toRecord(3,0,'次卡明细')">
-						<i class="iconfont icon-wodecishuqia"></i>
-						次卡明细
-					</view>
-					<view class="record-item" @click="toRecord(4,0,'无限卡明细')">
-						<i class="iconfont icon-nianqia"></i>
-						无限卡明细
-					</view>
+				<view class="vip-no" :style="{color:currentColor}">
+					NO.{{item.id}}
 				</view>
 			</view>
-
-
-			<view class="record">
-				<view class="header">
-					<text class="title">积分管理</text>
-					<view class="line">
-
-					</view>
-				</view>
-				<view class="record-list">
-					<view class="record-item" @click="toRecord(2,3,'积分商城')">
-						<i class="iconfont icon-jifenduihuan"></i>
-						积分商城
-					</view>
-					<view class="record-item" @click="toRecord(2,-1,'变动明细')">
-						<i class="iconfont icon-jifenbiandong"></i>
-						变动明细
-					</view>
-
-					<view class="record-item" @click="toRecord(2,1,'兑换明细')">
-						<i class="iconfont icon-jifen_jifenmingxi"></i>
-						兑换明细
-					</view>
-				</view>
-			</view>
-			<view class="fun">
-				<!-- <view class="fun-item">
-					<i class="iconfont icon-icon_erweima"></i>
-					支付二维码
-				</view> -->
-				<view class="fun-item" @click="authenticate">
-					<i class="iconfont icon-renlianshibie"></i>
-					人脸识别健身通道
-				</view>
-			</view>
-
-			<u-modal v-model="show" title="人脸识别健身通道" :show-cancel-button="true" @confirm="modelConfirm">
-				<view class="slot-content">
-					<view class="id-item">
-						<u-upload ref="front" :action="action" :multiple="false" :show-progress="false" :show-tips="false" :auto-upload="true"
-						 @on-remove="onFrontRemove" @on-change="onFrontChange" max-count="1"></u-upload>
-						<text class="id-item-title">1. 上传照片</text>
-					</view>
-					<!-- <view class="id-item">
-						<u-upload ref="reverse" :action="action" :multiple="false" :show-progress="false" :show-tips="false" :auto-upload="true" @on-remove="onReverseRemove" @on-change="onReverseChange" max-count="1"></u-upload>
-						<text class="id-item-title">2. 上传身份证反面</text>
-					</view> -->
-				</view>
-			</u-modal>
-			<u-popup mode="center" v-if="isdestory===true" border-radius="10" :closeable="true" width="80%" height="50%" v-model="payShow" @close="closePay">
-				<!-- <view style="width: 400rpx;">
-					<u-tabs :list="tablist" :is-scroll="false" :current="current" @change="tabchange"></u-tabs>
-				</view> -->
-				<view class="card-detail">
-					<view style="width: 450rpx; ">
-						<vtabs v-model="current" :scroll="true" :tabs="tablist" @change="tabchange">
-						</vtabs>
-					</view>
-					<!-- <u-radio-group class="pay-radio" v-model="payvalue">
-						<u-radio @change="payChange(index)" v-for="(item, index) in payList" :key="index" :name="item.name">
-							{{item.name}}
-						</u-radio>
-					</u-radio-group> -->
-					<tki-qrcode ref="qrcode" :val="val" size="300" :onval="true" @result="qrR" class="qrcode">
-					</tki-qrcode>
-					<view class="card-msg">
-						<view>
-							卡号:{{payList[index].id || ''}}
-						</view>
-						<view>
-							余额:{{payList[index].amount || '0'}}
-						</view>
-					</view>
-				</view>
-			</u-popup>
-		</view>
+			
+		</scroll-view>
 	</view>
+
 </template>
 
 <script>
 	import tkiQrcode from "@/components/tki-qrcode/tki-qrcode.vue"
-	import vtabs from "@/components/v-tabs/v-tabs.vue"
 	const globalData = getApp().globalData;
 	export default {
 		components: {
-			tkiQrcode,
-			vtabs
+			tkiQrcode
 		},
 		data() {
 			return {
@@ -173,31 +69,25 @@
 				payvalue: '白金卡',
 				payList: [],
 				index: 0,
-				tablist: [],
-				current: 0,
-				isdestory:false,
+				cardList:[],
+				currentColor:'',
 			}
 		},
 
 		onLoad(options) {
-			
 			this.avatar = globalData.avatar;
 			this.getMembershipCard();
+			/* this.getPayMsg(); */
+			/* this.getCards(); */
 		},
 
 		methods: {
-			tabchange(index) {
-				this.val = this.payList[index].id;
-				this.index = index;
-			},
 			openPay() {
 
 			},
 			closePay() {
-				this.isdestory=false;
 				this.payShow = false;
 				this.index = 0;
-				this.current=0;
 				this.$refs.qrcode._clearCode();
 			},
 			payChange(index) {
@@ -213,10 +103,12 @@
 				this.$refs.qrcode._clearCode();
 			},
 			async pay() {
-				this.isdestory=true;
-				this.payShow = true;
 				await this.getPayMsg();
+				this.payShow = true;
 				this.$refs.qrcode._makeCode()
+			},
+			refresh(){
+				console.log('刷新')
 			},
 			qrR() {
 				console.log('123');
@@ -239,37 +131,10 @@
 				console.log(res);
 				if (res.data.errCode === 0) {
 					let resData = res.data.data;
-					let payList = [{
-						name: '钻石卡',
-						id: '00001',
-						amount: '100'
-					}, {
-						name: '黑金卡',
-						id: '00002',
-						amount: '100'
-					}, {
-						name: '黑金卡',
-						id: '00002',
-						amount: '100'
-					}, {
-						name: '黑金卡',
-						id: '00002',
-						amount: '100'
-					}, {
-						name: '黑金卡',
-						id: '00002',
-						amount: '100'
-					}]
-					payList.push(resData[0]);
 					this.payList = resData;
-					let list=[];
-					this.payList = payList;
 					this.payList.forEach(item => {
-						list.push(item.name);
 						item.amount = parseInt(item.amount).toFixed(2);
 					})
-					this.tablist=list;
-					console.log(list);
 					this.payvalue = this.payList[0].name;
 					this.val = this.payList[0].id;
 				} else {
@@ -285,6 +150,11 @@
 					url: '../recharge/recharge'
 				})
 			},
+			toDetail(id){
+				uni.navigateTo({
+					url: `./cardDetail/cardDetail?id=${id}`
+				})
+			},
 			/*人脸识别健身通道*/
 			authenticate() {
 				this.show = true;
@@ -298,6 +168,7 @@
 			onFrontRemove() {
 				console.log("删除图片")
 			},
+			
 			toRecord(source, direction, title) {
 				if (source === 2 && direction === 3) {
 					if (this.cardInfo.score === 0) {
@@ -337,6 +208,7 @@
 							let resData = res.data.data;
 							that.cardInfo = resData;
 							that.cardInfo.money = resData.money.toFixed(2);
+							that.payList=resData.data;
 							console.log(that.cardInfo.money);
 						} else {
 							uni.showLoading({
@@ -352,6 +224,7 @@
 </script>
 
 <style lang="less" scoped>
+	
 	::v-deep .u-radio-group {
 		display: flex;
 		justify-content: center;
@@ -407,7 +280,6 @@
 	}
 
 	.container {
-		margin-top: 13rpx;
 		padding: 20rpx;
 	}
 
@@ -427,55 +299,41 @@
 	.card-info {
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
-		padding: 33rpx;
+		justify-content: center;
+		padding: 39rpx;
 		width: inherit;
-		height: 432rpx;
+		height: 160rpx;
+		margin-top: 20rpx;
 		/* background-color: #121212; */
-		background: url("https://s3.ax1x.com/2021/03/02/6FwfBQ.jpg");
+		background: url('https://s3.ax1x.com/2021/03/02/6FwGfx.jpg');
+		/* background-image:linear-gradient(to right, #ceb074, #d0a167); */
 		background-size: 100% 100%;
 		background-repeat: no-repeat;
 		border-radius: 20rpx;
 		color: #fff;
-
 		>.user {
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
 
-			.detail {
-				display: flex;
-				align-items: center;
-
-				>.logo {
-					display: block;
-					width: 100rpx;
-					height: 100rpx;
-					border-radius: 50%;
-					background-color: #fff;
-				}
-
-				>.brand {
-					margin-left: 20rpx;
-
-					>.user-name {
-						font-size: 34rpx;
-						font-weight: 700;
-					}
-
-					>.card-type {
-						margin-top: 10rpx;
-					}
-				}
+			>.logo {
+				display: block;
+				width: 100rpx;
+				height: 100rpx;
+				border-radius: 50%;
+				background-color: #fff;
 			}
 
-			.more {
-				color: black;
-				margin-right: -30rpx;
-				padding: 5rpx 10rpx 5rpx 30rpx;
-				background: white;
-				border-radius: 10rpx 0 0 10rpx;
-				font-size: 24rpx;
+			>.brand {
+				margin-left: 20rpx;
+
+				>.user-name {
+					font-size: 34rpx;
+					font-weight: 700;
+				}
+
+				>.card-type {
+					margin-top: 10rpx;
+				}
 			}
 		}
 	}
@@ -535,6 +393,34 @@
 			margin: 20rpx auto 0;
 			font-size: 26rpx;
 			text-align: center;
+		}
+	}
+	.card-box{
+		border-radius: 15rpx;
+		margin-top: 50rpx;
+		background-color: white;
+		height: 900rpx;
+		padding-top: 20rpx;
+		.vipCard{
+			border-radius: 15rpx;
+			height: 288rpx;
+			margin: 19.5rpx;
+			color: white;
+			padding: 19.5rpx;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			background:url('https://s3.ax1x.com/2021/03/02/6F0C36.jpg');
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+			/* background-image: linear-gradient(to right, #ceb074, #d0a167); */
+			.vip-type{
+				font-size: 32rpx;
+				font-weight: 700;
+			}
+		}
+		.vipCard:first-child{
+			margin-top: 0;
 		}
 	}
 </style>

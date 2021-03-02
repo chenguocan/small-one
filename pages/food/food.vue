@@ -416,6 +416,9 @@ export default {
    */
   onShow: function () {
     let register = uni.getStorageSync('register');
+	this.getItemGroupAboutClient();
+	this.getBanner();
+	this.accountAbout();
     if (register === true) {
 	  this.appId = uni.getStorageSync('appId');
 	  this.openid = uni.getStorageSync('openId');
@@ -424,9 +427,6 @@ export default {
       let openId = this.openid;
       let point = uni.getStorageSync('point');
       let account = uni.getStorageSync('account');
-	  this.getItemGroupAboutClient();  
-      this.getBanner();
-      this.accountAbout();
       // if (!this.data.isBinding) {
       //   this.isBindingBill(appId, openId, point, account);
       // }
