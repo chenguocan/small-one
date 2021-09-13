@@ -1,6 +1,8 @@
 <template>
-	<view>
-		<u-toast ref="uToast" />
+	<view style="display: flex;justify-content: center;">
+		<view style="width: 300rpx;">
+			<u-button @click="scan" type="primary">点餐</u-button>
+		</view>
 	</view>
 </template>
 
@@ -11,37 +13,16 @@
 				
 			}
 		},
-		onLoad(){
-			uni.scanCode({
-				success: (res) => {
-					console.log(res);
-				    this.$refs.uToast.show({
-					title: '扫码成功',
-					type: 'success',
-					duration:100,
-					url: '/pages/food/food',
-					params:{
-						scene:'4d6375d93c9838ab,3,075,121212'
-					}
-				  })
-				},
-				fail:(err)=>{
-					uni.showToast({
-						icon:'none',
-						title:'请重新扫码',
-						duration:1000
-					})
-					setTimeout(function(){
-						uni.navigateBack();
-					},1000);
-				}
-			})
-		},
 		methods: {
-			b64DecodeUnicode(str) {
-			    return decodeURIComponent(atob(str).split('').map(function(c) {
-			        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-			    }).join(''));
+			scan(){
+				uni.scanCode({
+					success(res) {
+						console.log(res)
+						uni.navigateTo({
+							url:'../scanfood/scanfood?url='+res.result
+						})
+					}
+				})
 			}
 		}
 	}

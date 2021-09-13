@@ -392,8 +392,8 @@ export default {
 	
 	&--primary--disabled {
 		color: #ffffff!important;
-		border-color: $u-type-primary-disabled!important;
-		background-color: $u-type-primary-disabled!important;
+		border-color: #d1a766 !important;
+		background-color: #d1a766 !important;
 	}
 	
 	&--success--disabled {

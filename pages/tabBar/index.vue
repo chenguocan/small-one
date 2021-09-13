@@ -1,13 +1,8 @@
 <template>
 	<view class="map">
-		<view class="search_view">
-			<input type="text" value="" placeholder="搜索从这里开始" class="search" v-model="search_value" />
-			<view class="search_icon">
-			</view>
-		</view>
 		<view class="swiper_view">
-			<swiper class="swiper" :circular="true" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval"
-			 :duration="duration">
+			<swiper class="swiper" :circular="true" :indicator-dots="indicatorDots" :autoplay="autoplay"
+				:interval="interval" :duration="duration">
 				<swiper-item v-for="(item,index) in bannerList" :key="index" @click='bannerDetail(item)'>
 					<image class="image-item" :src="item"></image>
 				</swiper-item>
@@ -15,35 +10,33 @@
 		</view>
 		<!-- 公司简介 -->
 		<view class="nav-list">
-			<view class="nav-item" @click="toNav(index)" v-for="(item,index) in navList" :key="index">
-				<i class="iconfont" :class="item.icon"></i>
-				<text>{{item.name}}</text>
-			</view>
+				<view class="nav-item" v-if="item.visible" @click="toNav(item)" v-for="(item,index) in navList" :key="index">
+					<!-- <i class="iconfont" :class="item.icon"></i> -->
+					<view  
+						style="display: flex;align-items: center;justify-content: center;flex-direction: column;z-index: 110;">
+						<view v-if="item.url">
+							<image style="width: 65rpx;height: 65rpx;" :src="item.url"></image>
+						</view>
+						<view v-else>
+							<i class="iconfont iconkefang" v-if="index===0"></i>
+							<i class="iconfont iconzhongcan" v-else-if="index===1"></i>
+							<i class="iconfont iconxican"  v-else-if="index===2"></i>
+							<i class="iconfont iconjianshen" v-else-if="index===3"></i>
+							<i class="iconfont iconspa" v-else-if="index===4"></i>
+							<i class="iconfont iconqipaishi" v-else-if="index===5"></i>
+						</view>
+						<text>{{item.name}}</text>
+					</view>					
+				</view>			
 		</view>
 		<view class="list_view">
 			<view class="phone-img">
-				<u-icon name="phone" size="65"></u-icon>
-				<text style="margin-left: 10rpx;">0592-50895999</text>
+				<image class="phoneImg" :src="phoneImg"></image>
+				<!-- <u-icon name="phone" size="65"></u-icon>
+				<text style="margin-left: 10rpx;">0592-6738888</text> -->
 			</view>
 		</view>
 		<!-- 工位展示 -->
-		<view class="list_view">
-			<view class="big-title">
-				<text class="title">{{showList.title}}</text>
-				<text class="sub-title">{{showList.sub_title}}</text>
-			</view>
-			<view class="list_item" @click="toDetail(item.id)" v-for="(item,index) in list" :key="index">
-				<image class="img_item" :src="item.url"></image>
-				<view class="title_item">
-					<view class="title">
-						{{item.title}}
-					</view>
-					<view class="content">
-						{{item.subTitle}}
-					</view>
-				</view>
-			</view>
-		</view>
 		<view class="about-us">
 			<view class="big-title">
 				<text class="title">{{aboutList.title}}</text>
@@ -55,50 +48,39 @@
 				</view>
 			</view>
 		</view>
-		<u-popup mode="center"   border-radius="10" :closeable="true" width="80%" height="50%" v-model="payShow" @close="closePay">
+		<u-popup mode="center" border-radius="10" :closeable="true" width="80%" height="50%" v-model="payShow"
+			@close="closePay">
 			<view class="card-detail">
 				<u-radio-group class="pay-radio" v-model="payvalue">
 					<u-radio @change="payChange(index)" v-for="(item, index) in payList" :key="index" :name="item.name">
 						{{item.name}}
 					</u-radio>
 				</u-radio-group>
-				<tki-qrcode ref="qrcode" :val="val" size="300" :onval="true"  class="qrcode">
+				<tki-qrcode ref="qrcode" :val="val" size="300" :onval="true" class="qrcode">
 				</tki-qrcode>
 				<view class="card-msg">
-					<view>
-						卡号:{{payList[index].id}}
-					</view>
-					<view>
-						余额:{{payList[index].amount}}
-					</view>
 				</view>
 			</view>
 		</u-popup>
-		<!-- <u-popup mode="center"   border-radius="10" :closeable="true" width="80%" height="50%" v-model="locationShow" @close="closeLocation">
-			<view>
-				<view>{{location}}</view>
-				<view>经度{{longitude}}</view>
-				<view>纬度{{latitude}}</view>
-			</view>
-		</u-popup> -->
+
 	</view>
 </template>
 
 <script>
-	import amap from "../../lib/amap-wx.js"
 	import tkiQrcode from "@/components/tki-qrcode/tki-qrcode.vue"
 	const globalData = getApp().globalData;
+	const prefix = getApp().globalData.url3;
 	export default {
 		components: {
 			tkiQrcode
 		},
 		data() {
 			return {
-				latitude:'',
-				longitude:'',
-				locationShow:false,
-				location:'北京市',
-				powerList:[],
+				latitude: '',
+				longitude: '',
+				locationShow: false,
+				location: '北京市',
+				powerList: [],
 				////////--search--//////////
 				search_value: '',
 				size: 'cover',
@@ -108,83 +90,100 @@
 				interval: 2000,
 				duration: 500,
 				////////--banner--//////////
-				list: [
-					// {
-					// 	image: 'https://cdn.uviewui.com/uview/swiper/1.jpg',
-					// 	title: '昨夜星辰昨夜风，画楼西畔桂堂东',
-					// 	search_icon: "url('https://cdn.uviewui.com/uview/swiper/1.jpg') no-repeat"
-					// },
-					// {
-					// 	image: 'https://cdn.uviewui.com/uview/swiper/2.jpg',
-					// 	title: '身无彩凤双飞翼，心有灵犀一点通',
-					// 	search_icon: "url('https://cdn.uviewui.com/uview/swiper/2.jpg') no-repeat"
-					// },
-					// {
-					// 	image: 'https://cdn.uviewui.com/uview/swiper/3.jpg',
-					// 	title: '谁念西风独自凉，萧萧黄叶闭疏窗，沉思往事立残阳',
-					// 	search_icon: "url('https://cdn.uviewui.com/uview/swiper/3.jpg') no-repeat"
-					// },{
-					// 	image: 'https://cdn.uviewui.com/uview/swiper/3.jpg',
-					// 	title: '谁念西风独自凉，萧萧黄叶闭疏窗，沉思往事立残阳',
-					// 	search_icon: "url('https://cdn.uviewui.com/uview/swiper/3.jpg') no-repeat"
-					// },{
-					// 	image: 'https://cdn.uviewui.com/uview/swiper/3.jpg',
-					// 	title: '谁念西风独自凉，萧萧黄叶闭疏窗，沉思往事立残阳',
-					// 	search_icon: "url('https://cdn.uviewui.com/uview/swiper/3.jpg') no-repeat"
-					// }
-				],
+				list: [],
 				mode: 'round',
 				effect3d: false,
 				indicatorPos: 'bottomCenter',
 				showList: [], // 页面内容
 				bannerList: [], // 轮播图列表
-				aboutList: [],
-				navList: [{
-					index: 0,
-					icon: 'icon-kefang',
-					name: "客房"
-				}, {
-					index: 1,
-					icon: 'icon-zhongcanting',
-					name: '中餐厅',
-				}, {
-					index: 2,
-					icon: 'icon-xicanting',
-					name: '西餐厅'
-				}, {
-					index: 3,
-					icon: 'icon-spa',
-					name: "SPA"
-				}, {
-					index: 4,
-					icon: 'icon-jianshen',
-					name: "康体"
-				}, {
-					index: 5,
-					icon: 'icon-icon-test16',
-					name: "棋牌室"
-				}],
+				aboutList: {
+					title: '厦门君泰酒店',
+					image: ""
+				},
+				navList: [
+					/* {
+										index: 0,
+										icon: 'icon-kefang',
+										name: "客房"
+									}, {
+										index: 1,
+										icon: 'icon-zhongcanting',
+										name: '中餐厅',
+									}, {
+										index: 2,
+										icon: 'icon-xicanting',
+										name: '茶餐厅'
+									},{
+										index: 4,
+										icon: 'icon-jianshen',
+										name: "康体"
+									}, {
+										index: 5,
+										icon: 'icon-icon-test16',
+										name: "棋牌室"
+									} */
+				],
 				payShow: false,
 				payvalue: '白金卡',
 				payList: [],
 				val: {},
-				index:0,
+				index: 0,
+				phoneImg: '',
 			}
 		},
-		onShow() {
-			this.getAbout();
-			this.getShowList();
+		async onShow() {
+			await this.$onLaunched;
+			/* console.log(PinyinUtils.chineseToPinYin('黄立旻')); */
+			/* let pinyin=PinyinUtils.chineseToPinYinFirst('陈国灿');
+			if(pinyin){
+				console.log(pinyin)
+			}else{
+				console.log('wuuwuwuuwuwuwuw')
+			} */
+			/* this.getAbout();
+			this.getShowList(); */
+			this.getBackground();
+		
+			let list = [];
+			globalData.powerList.forEach(item => {
+				if (item.page === 'home') {
+					list = item.items;
+				}
+			})
+			this.navList = list;
+			console.log(list);
 		},
 
 		methods: {
+			getBackground() {
+				let that = this;
+				uni.request({
+					method: 'POST',
+					url: prefix + '/Config/GetTargetConfig',
+					data: {
+						target: 'home',
+						uid: globalData.uid
+					},
+					success(res) {
+						if (res.data.errCode === 0) {
+							console.log(res);
+							that.bannerList = res.data.data.banner;
+							that.phoneImg = res.data.data.tel
+							that.aboutList.image = res.data.data.about;
+						} else {
+
+						}
+					}
+				})
+			},
 			/**
 			 * 跳转公司简介
 			 */
-			goAbout(){
+			goAbout() {
 				let temindex = globalData.powerList[0];
 				if (temindex === true) {
 					uni.navigateTo({
-						url:"../index/richText"
+						url: "../index/richText"
 					})
 				} else {
 					uni.showToast({
@@ -196,22 +195,22 @@
 			/**
 			 * 跳转房型
 			 */
-			toDetail(id){
-				let temindex=globalData.powerList[0];
-				if(temindex===true){
+			toDetail(id) {
+				let temindex = globalData.powerList[0];
+				/* if(temindex===true){
 					uni.navigateTo({
 						url:`../index/showDetails?id=${id}`
 					})
 				}else{
 					this.xxx();
-				}
+				} */
 			},
-			closeLocation(){
-				this.locationShow=false;
+			closeLocation() {
+				this.locationShow = false;
 			},
-			closePay(){
+			closePay() {
 				this.payShow = false;
-				this.index=0;
+				this.index = 0;
 				this.$refs.qrcode._clearCode();
 			},
 			payChange(index) {
@@ -219,26 +218,52 @@
 				this.index = index;
 			},
 			xxx() {
-				return uni.showToast({
+				/* return uni.showToast({
 					icon: 'none',
 					title: '功能暂未开放',
-				})
+				}) */
 			},
 			async pay() {
 				await this.getPayMsg();
 				this.payShow = true;
 				this.$refs.qrcode._makeCode()
 			},
-			toNav(index) {
-				let temindex=globalData.powerList[index];
-				if (temindex===true) {
-					this.pay();
-				} else {
-					return uni.showToast({
-						title: '功能暂未开放',
-						icon:'none'
-					})
+			toNav(item) {
+				if(!globalData.register){
+					this.goRegister()
+				}else{
+					if (!item.enable) {
+						uni.showModal({
+							title: '提示',
+							content: item.tip,
+							showCancel: false
+						})
+					} else if (item.enable && parseInt(item.code) === 100) {
+						uni.navigateTo({
+							url: '../food/food'
+						})
+					} else if (item.enable && parseInt(item.code) === 102) {
+						uni.navigateTo({
+							url:'../takeOrder/takeOrder'
+						})
+					}
 				}
+			},
+			goRegister(){
+				uni.showModal({
+					title: '提示',
+					content: '您尚未登录，请登录账号！',
+					confirmText: '确定',
+					showCancel: true,
+					success(res) {
+						if (res.confirm) {
+							uni.navigateTo({
+								url:'../user/login'
+							})
+						}
+					}
+				});
+				
 			},
 			gofood() {
 				uni.navigateTo({
@@ -249,8 +274,8 @@
 			 * 跳转Banner
 			 */
 			bannerDetail(item) {
-				let temindex=globalData.powerList[0];
-				if(temindex===true){
+				let temindex = globalData.powerList[0];
+				/* if(temindex===true){
 					uni.navigateTo({
 						url: '../index/bannerImage',
 						success: () => {
@@ -264,7 +289,7 @@
 					uni.showToast({
 						title: '功能暂未开放',
 					})
-				}
+				} */
 			},
 			/**
 			 * 获取公司简介
@@ -391,6 +416,12 @@
 		height: 150rpx;
 		background-color: #595959;
 		border-radius: 15rpx;
+
+		.phoneImg {
+			width: 100%;
+			height: 150rpx;
+			border-radius: 15rpx;
+		}
 	}
 
 	.image-item {
@@ -439,12 +470,14 @@
 		margin: 20rpx 20rpx 0 20rpx;
 		background: white;
 		border-radius: 15rpx;
-		opacity: 0.6;
+		/* opacity: 0.6; */
+		color: #9a9a9a;
 		box-shadow: 0rpx 0rpx 10rpx #a3a3a3;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		padding-bottom: 20rpx;
+		justify-content: center;
 
 		.nav-item {
 			justify-content: center;
@@ -520,7 +553,8 @@
 		font-size: 18rpx;
 		overflow: hidden;
 	}
-	.card-detail{
+
+	.card-detail {
 		height: 100%;
 		display: flex;
 		flex-direction: column;

@@ -331,6 +331,7 @@ export default {
 		padding: 10rpx 0;
 		line-height: normal;
 		flex: 1;
+		height: 120rpx;
 	}
 
 	&--border {

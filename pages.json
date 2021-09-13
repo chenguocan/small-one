@@ -9,23 +9,24 @@
 				"navigationBarTitleText": "首页"
 				// "navigationStyle": "custom"
 			}
-		}, {
+		},{
+			"path": "pages/tabBar/user",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		
+		},/* {
 			"path": "pages/reserve/reserve",
 			"style": {
 				"navigationBarTitleText": "预定"
 				// "enablePullDownRefresh": true,
 				// "navigationStyle": "custom"
 			}
-		}, {
-			"path": "pages/tabBar/user",
-			"style": {
-				"navigationBarTitleText": "我的"
-			}
-
-		}, {
+		}, */ {
 			"path": "pages/user/login",
 			"style": {
-				"navigationBarTitleText": "授权登录"
+				"navigationBarTitleText": "授权登录",
+				"navigationBarBackgroundColor": "#be2d29"
 			}
 		}, {
 			"path": "pages/reserve/product",
@@ -41,19 +42,6 @@
 			"path": "pages/user/setting",
 			"style": {
 				"navigationBarTitleText": "个人认证"
-			}
-		}, {
-			"path": "pages/coupon/coupon",
-			"style": {
-				"navigationBarTitleText": "优惠券"
-
-			}
-		},
-		{
-			"path": "pages/tabBar/search",
-			"style": {
-				"navigationBarTitleText": "酒店预定"
-
 			}
 		},
 		{
@@ -106,35 +94,25 @@
 			"style": {
 				"navigationBarTitleText": "预定账单详情"
 			}
-		}, {
-			"path": "pages/index/bannerImage",
-			"style": {
-				"navigationBarTitleText": "详情"
-			}
-
 		},
 		{
 			"path": "pages/food/food",
 			"style": {
-				"navigationBarBackgroundColor": "#69a6d2",
-				"navigationBarTitleText": "餐饮"
+				"navigationBarBackgroundColor": "#be2d29",
+				"enablePullDownRefresh": true,
+				"navigationBarTitleText": "餐饮",
+				"navigationStyle": "custom"
 			}
 
 		}, {
 			"path": "pages/shopOrder/shopOrder",
 			"style": {
 				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
 			}
 
-		}, {
-			"path": "pages/scan/scan",
-			"style": {
-				"navigationBarTitleText": "扫码",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
+		},{
 			"path": "pages/shop/shop",
 			"style": {
 				"navigationBarTitleText": "商城",
@@ -150,7 +128,7 @@
 
 		}
 	    ,{
-            "path" : "pages/xxxxxxx/xxxxxxx",
+            "path" : "pages/coupon/coupon",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
@@ -185,6 +163,173 @@
             }
             
         }
+        ,{
+            "path" : "pages/new/new",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/shopDetail/shopDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/foodOrder/foodOrder",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "white",
+                "enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/selectType/selectType",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/buyTicket/buyTicket",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/card/card",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/confirm/confirm",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/takeOrder/takeOrder",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+                "navigationStyle": "custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/myAddress/myAddress",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+				
+            }
+            
+        }
+        ,{
+            "path" : "pages/takeDetail/takeDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/takeFoodDetail/takeFoodDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/advise/advise",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        /* ,{
+            "path" : "pages/scan/scan",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/scanfood/scanfood",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        } */
+        ,{
+            "path" : "pages/takeOrderDetail/takeOrderDetail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/foodState/foodState",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/orders/orders",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/orders/detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -208,17 +353,22 @@
 				"selectedIconPath": "static/images/tab_icon_home_selected.png",
 				"text": "首页"
 
-			}, {
-				"pagePath": "pages/shop/shop",
+			},{
+				"pagePath": "pages/orders/orders",
+				"iconPath": "static/images/orders.png",
+				"selectedIconPath": "static/images/orders-selected.png",
+				"text": "订单"
+			},/* {
+				"pagePath": "pages/shop/shop", 
 				"iconPath": "static/images/shop.png",
 				"selectedIconPath": "static/images/shop-active.png",
 				"text": "商城"
-			}, {
+			}, *//* {
 				"pagePath": "pages/search/search",
 				"iconPath": "static/images/tab_icon_rent_default.png",
 				"selectedIconPath": "static/images/tab_icon_rent_selected.png",
-				"text": "预定"
-			},
+				"text": "预订"
+			}, */
 			/* {
 						"pagePath": "pages/food/food",
 						"iconPath": "static/images/cook.png",

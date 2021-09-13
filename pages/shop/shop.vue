@@ -1,31 +1,30 @@
 <template>
 	<view>
 		<view>
-			<swiper class="swiper-banner" indicator-dots>
+			<uni-search-bar :radius="100" placeholder="请输入商品名称"  ></uni-search-bar>
+			<!-- <u-search bg-color="#ffffff" placeholder="搜索" v-model="searchShop"></u-search> -->
+			<!-- <swiper class="swiper-banner" indicator-dots>
 				<swiper-item  v-for="(item,index) in bannerList" :key="index">
 					<image class="banner" :src="item"></image>
 				</swiper-item>
-			</swiper>
+			</swiper> -->
 		</view>
 		<view class="shop">
-			<view class="shop-list" v-for="item in 1" :key="item" @click="xxx">
+			<view class="shop-list" v-for="item in shopList" :key="item.id" @click="getDetail(item.id)" >
 				<view class="medicine-bg">
-					<image class="medicine-img" src="../../static/images/food.jpg"></image>
+					<image class="medicine-img" :src="item.sub_image"></image>
 				</view>
 				<view class="detail">
 					<view class="characteristic">
 						<view class="char-list">
-							美味
-						</view>
-						<view class="char-list">
-							特价
+							{{item.type_name}}
 						</view>
 					</view>
 					<view class="medicine-name">
-						新派素食自助餐券*10张
+						{{item.title}}
 					</view>
 					<view class="medicine-price">
-						￥688
+						￥{{(item.discount_price/100).toFixed(2)}}
 					</view>
 				</view>
 			</view>
@@ -36,33 +35,55 @@
 </template>
 
 <script>
+	import uniSearchBar from "../../components/uni-search-bar/uni-search-bar";
 	const globalData=getApp().globalData;
+	const prefix=getApp().globalData.url3;
 	export default {
+		components:{
+			uniSearchBar
+		},
 		data() {
 			return {
+				searchShop:'',
 				value: '',
 				type: 'text',
 				bannerList:['../../static/images/banner1.jpg','../../static/images/banner2.jpg','../../static/images/banner3.jpg'],
+				shopList:[],
 			}
 		},
 		onLoad(){
-			let temindex=globalData.powerList[0];
-			if(temindex===true){
+			globalData.powerList.forEach(item=>{
 				
-			}else{
-				uni.showToast({
-					icon:'none',
-					title:'功能暂未开放',
-				})
-			}
+				if(item.page==='shop' && !item.enable){
+					uni.showToast({
+						title:item.tip,
+						icon:'none'
+					})
+				}
+			})
+			this.goodsList();
 		},
 		methods: {
-			xxx(){
-				return uni.showToast({
-					icon:'none',
-					title:'功能暂未开放',
+			getDetail(id){
+				uni.navigateTo({
+					url:'../shopDetail/shopDetail?id='+id
 				})
-			}
+			},
+			goodsList(){
+				let that=this;
+				uni.request({
+					method:'POST',
+					url:prefix+'/EShop/GetGoodsList',
+					data:{
+						uid:globalData.uid
+					},
+					success(res) {
+						if(res.data.errCode===0){
+							that.shopList=res.data.data;
+						}
+					}
+				})
+			},
 		}
 	}
 </script>

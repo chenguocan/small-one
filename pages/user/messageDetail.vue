@@ -7,7 +7,7 @@
 			</view>
 			<view class="time">
 				<view class="time-body">
-					{{info.datetime}}
+					{{info.create_datetime}}
 				</view>
 				<view v-if="info.type == 1" class="pay" @click="intoPay(info.parameter)">去支付</view>
 			</view>
@@ -90,11 +90,10 @@
 				let id = this.id;
 				uni.request({
 					method: 'POST',
-					url: globalData.api + '/MCM/GetInfo',
+					url: globalData.url3 + '/Message/GetMessage',
 					data: {
-						appid: globalData.appid,
-						openid: globalData.openid,
-						id: id
+						id: id,
+						uid:globalData.uid
 					},
 					success: function (res) {
 						console.log('getInfo', res);
@@ -114,15 +113,14 @@
 			setInfoState() {
 				const that = this;
 				const id = this.id;
-				const state = 1;
+				const state = 2;
 				uni.request({
 					method: 'POST',
-					url: globalData.api + '/MCM/SetInfoState',
+					url: globalData.url3 + '/Message/SetMessageState',
 					data: {
-						appid: globalData.appid,
-						openid: globalData.openid,
 						id: id,
-						state: state
+						state: state,
+						uid:globalData.uid
 					},
 					success: function (res) {
 						console.log('SetInfoState', res);

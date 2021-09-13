@@ -1,26 +1,18 @@
 <template>
-	<view>
-		<view class="top">
-			<!-- <view class="pencil" @click="toSetting"></view> -->
-			<view class="email" @click="toEmail" v-if="msgNum>0">
-				<!-- @click="toEmail" -->
-				<text class="num">{{msgNum}}</text>
+	<view style="height: 500rpx;">
+		<view class="top" :style="'background-image:url('+background+')'">
+			<view class="email" @click="toEmail" v-if="register">
+				<text class="num" v-if="msgNum!=0">{{msgNum}}</text>
 			</view>
 			<view class="header" @click="toLogin">
-				<!-- @click="toLogin" -->
 				<view class="headimg">
 					<u-avatar :src="userInfo.avatarUrl"></u-avatar>
-					<!-- <img :src="userInfo.avatarUrl" alt="" class='img'> -->
 				</view>
 				<view class="user_name">
 					<view>
-						<text class='phone'>{{userInfo.avatarUrl ? userInfo.nickName : '立即登录'}}</text>
+						<text class='phone'>{{register ? userInfo.nickName : '立即登录'}}</text>
 					</view>
-					<text class="phone">{{userInfo.avatarUrl ? userInfo.phone : ''}}</text>
-					<!-- <view class='phone vip' v-if="is===true" @click.stop='vipNav'>
-						我的会员卡
-						<u-icon size="25" class='rightIcon' color="#f3f4f4" name="arrow-right"></u-icon>
-					</view> -->
+					<view class="phone">{{register ? userPhone : ''}}</view>
 				</view>
 				<view class="car-desc">{{membershipDescription}}</view>
 			</view>
@@ -28,8 +20,15 @@
 		<view class="navbar">
 			<view class='navContent'>
 				<view class='xxx'>
-					<view class="bar" v-for="(item,index) in barList" :key="item.id" @click="toOrderList(index+1)">
-						<!-- @click="toOrderList(index+1)" -->
+					<view style="position: absolute; top: 10rpx;left: 20rpx;" @click="toAll()">
+						<text style="font-size: 28rpx;margin-right: 5rpx;font-weight: 700;">我的订单</text>
+					</view>
+					<view style="position: absolute; top: 10rpx;right: 20rpx;" @click="toAll()">
+						<text style="font-size: 24rpx;margin-right: 5rpx;color: #adadad;">查看全部</text>
+						<u-icon size="20" color="#adadad" name="arrow-right"></u-icon>
+					</view>
+					<view class="bar" style="width: 33.3%;" v-for="(item,index) in barList" :key="item.id"
+						@click="toOrderList(index+1)">
 						<view class='bar_view'> <i class="iconfont" :class="item.icon"></i></view>
 						<view class="bar_name">
 							{{item.name}}
@@ -41,22 +40,39 @@
 
 		<view class="navbar">
 			<view class='navContent'>
-				<view class='card'>
-					<view class="card-item" v-for="(item,index) in cardList" :key="index" @click="toCard(index)">
-						<view class="card-icon">
-							<i class="iconfont" :class="item.icon" :style="{color:item.color}"></i>
-						</view>
-						<view class="card-detail">
-							<text class="name" :style="{color:item.color}">{{item.name}}</text>
-							<text class="num">{{item.num}}</text>
+				<view class='yyy'>
+					<view style="position: absolute; top: 10rpx;left: 20rpx;" @click="toAll()">
+						<text style="font-size: 28rpx;margin-right: 5rpx;font-weight: 700;">我的计划</text>
+					</view>
+					<view style="position: absolute; top: 10rpx;right: 20rpx;" @click="toAll()">
+						<text style="font-size: 24rpx;margin-right: 5rpx;color: #adadad;">查看全部</text>
+						<u-icon size="20" color="#adadad" name="arrow-right"></u-icon>
+					</view>
+					<view class="bar" :style="{width:100%planList+'%'}" v-for="(item,index) in planList" :key="item.id"
+						@click="toOrderList(index+1)">
+						<view class='bar_view'> <i class="iconfont" :class="item.icon"></i></view>
+						<view class="bar_name">
+							{{item.name}}
 						</view>
 					</view>
 				</view>
 			</view>
 		</view>
+
 		<view class="floored">
-			<view class="floored_item" v-for="(item,index) in list" :key="index" @click="toFloored(item.index)">
-				<!-- @click="toFloored(item.index)" -->
+			<view class="floored_item" v-for="(item,index) in cardList" :key="index" @click="toCard(item,index)">
+				<view class="floored_img">
+					<i class="iconfont" :class="item.icon" :style="{color:item.color}"></i>
+				</view>
+				<view class="floored_name">
+					<text class="name" :style="{color:item.color}">{{item.name}}</text>
+					<i class="iconfont iconarrowRight-copy-copy-copy" style="font-size: 30rpx;"></i>
+					<!-- <u-icon size="30" color="black" name="arrow-right"></u-icon> -->
+				</view>
+			</view>
+		</view>
+		<view class="floored" style="margin-top: 20rpx;">
+			<view class="floored_item" v-for="(item,index) in list" :key="index" @click="toFloored(item,item.index)">
 				<view class="floored_view">
 					<view class="floored_img">
 						<i class="iconfont" :class="item.icon"></i>
@@ -64,7 +80,7 @@
 				</view>
 				<view class="floored_name">
 					{{item.name}}
-					<u-icon size="30" color="black" name="arrow-right"></u-icon>
+					<i class="iconfont iconarrowRight-copy-copy-copy" style="font-size: 30rpx;"></i>
 				</view>
 			</view>
 		</view>
@@ -76,6 +92,7 @@
 
 <script>
 	const globalData = getApp().globalData;
+	const prefix = globalData.api;
 	export default {
 		data() {
 			return {
@@ -86,50 +103,72 @@
 				is: false,
 				usableRoomList: [],
 				barList: [{
-						name: "待付款",
-						icon: 'icon-chaoshiweifukuan',
+						name: "未支付",
+						icon: 'iconweizhifu',
 						index: 1
 					},
 					{
-						name: "已付款",
-						icon: 'icon-yifukuandingdan',
+						name: "已支付",
+						icon: 'iconyizhifu',
 						index: 2
 					},
+
 					{
-						name: "执行中",
-						icon: "icon-zhihangzhong",
-						index: 3
-					},
-					{
-						name: "已完成",
-						icon: "icon-yiwancheng2",
+						name: "已取消",
+						icon: "iconyiquxiao",
 						index: 4
 					}
 				],
-				cardList:[{
-					name:'会员卡',
-					icon:'icon-dingdan',
-					color:'#41cdff',
-					num:'0',
-				},{
-					name:'积分',
-					icon:'icon-dingdan',
-					color:'',
-					num:'0',
-				},{
-					name:'优惠券',
-					icon:'icon-dingdan',
-					color:'#ff6f6f',
-					num:'0',
-				}],
-				list: [{
-						name: "我的订单",
-						icon: "icon-dingdan",
-						index: 0
+				planList: [{
+						name: "待执行",
+						icon: 'icondaizhihangde',
+						index: 1
 					},
 					{
+						name: "执行中",
+						icon: 'iconziliao',
+						index: 2
+					},
+					{
+						name: "已执行",
+						icon: "iconyizhihangde",
+						index: 3
+					},
+					{
+						name: "已取消",
+						icon: "icontubiao-quxiao",
+						index: 4
+					}
+				],
+				cardList: [{
+					name: '会员卡',
+					icon: 'iconhuiyuankax',
+					color: '#41cdff',
+					num: '0',
+				}, {
+					name: '积分',
+					icon: 'iconziyuan',
+					color: '',
+					num: '0',
+				}, {
+					name: '优惠券',
+					icon: 'iconquan',
+					color: '#ff6f6f',
+					num: '0',
+				}],
+				list: [{
+					name:'我的地址',
+					icon:'',
+					index:0
+				},
+					/* {
+											name: "我的订单",
+											icon: "icon-dingdan",
+											index: 0
+										}, */
+					{
 						name: "门禁管理",
-						icon: "icon-menjin",
+						icon: "iconmenjin",
 						index: 1
 					},
 					/* {
@@ -139,38 +178,66 @@
 					}, */
 					{
 						name: "我的房卡",
-						icon: "icon-zhinengmensuo",
+						icon: "iconcard-pluck",
 						index: 4
-					},
-					{
-						name: "优惠券",
-						icon: "icon-youhuiquan",
-						index: 3
 					}
+					/* ,
+										{
+											name: "优惠券",
+											icon: "icon-youhuiquan",
+											index: 3
+										} */
 				],
 				msgNum: 0, // 消息数量
 				showPopup: false, // 显示模态框图
 				lockImage: '', // 开锁的二维码
 				membershipDescription: '', // 会员卡描述
+				userPhone: '',
+				background: '',
+			}
+		},
+		/* async onLoad() {
+			await this.$onLaunched;
+			this.register = globalData.register;
+			if (!this.register) {
+				uni.navigateTo({
+					url: '/pages/user/login',
+				})
+			}
+		}, */
+		onLoad() {
+			if (globalData.register === false) {
+				uni.showModal({
+					title: '提示',
+					content: '用户未注册，请先注册',
+					confirmText: '确定',
+					success(res) {
+						if (res.confirm) {
+							uni.navigateTo({
+								url: '../user/login'
+							})
+						}
+					}
+				})
 			}
 		},
 		async onShow() {
 			await this.$onLaunched;
 			// this.loadUser();
 			let openId = this.openId = globalData.openid;
+			this.register = globalData.register;
+			console.log(globalData);
 			// #ifdef MP-WEIXIN
-			this.getAccount();
+			this.getBackground();
+			if (globalData.register) {
+				this.getAccount();
+				this.getPhone();
+				this.getNewInfoCount();
+			}
 			// #endif
 
 			/////////////////////////////////
-			/* this.getNewInfoCount(); */
-			this.register = globalData.register;
-			if (!this.register) {
-				uni.reLaunch({
-					url: '/pages/user/login',
 
-				})
-			}
 			/* this.getLockAuthorizeRoom(); */
 			//////////////////////////////////
 			// this.getOpenLock();
@@ -178,17 +245,69 @@
 			// if (openId) this.getAccount();
 		},
 		methods: {
-			toCard(index){
-				console.log(index);
-				if(index===2){
+			getBackground() {
+				let that = this;
+				uni.request({
+					method: 'POST',
+					url: globalData.url3 + '/Config/GetTargetConfig',
+					data: {
+						target: 'my',
+						uid: globalData.uid
+					},
+					success(res) {
+						if (res.data.errCode === 0) {
+							that.background = res.data.data.head;
+						} else {
+
+						}
+					}
+				})
+			},
+
+			toCard(item, index) {
+				if(index===3){
 					uni.navigateTo({
-						url:'../xxxxxxx/xxxxxxx'
-					})
-				}else if(index===0){
-					uni.navigateTo({
-						url: "../user/vipCard/vipCard"
+						url:'../breakFast/breakFast'
 					})
 				}
+				if (this.register) {
+					globalData.powerList.forEach(item2 => {
+						if (item2.page === 'my') {
+							item2.items.forEach(item3 => {
+								if (item3.name === item.name) {
+									if (!item3.enable) {
+										return uni.showToast({
+											title: item3.tip,
+											icon: 'none'
+										})
+									} else if (index === 2) {
+										uni.navigateTo({
+											url: '../coupon/coupon?phone=' + this.userInfo.phone
+										})
+									} else if (index === 0) {
+										uni.navigateTo({
+											url: "../user/vipCard/vipCard"
+										})
+									}
+								}
+							})
+
+						}
+					})
+				} else {
+					uni.showModal({
+						title: '提示',
+						content: '请先登录后操作',
+						success: function(res) {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '../user/login'
+								})
+							}
+						}
+					})
+				}
+
 			},
 			xxx() {
 				return uni.showToast({
@@ -203,6 +322,14 @@
 				uni.navigateTo({
 					url: "../user/card"
 				})
+			},
+			toAll() {
+				uni.navigateTo({
+					url: '../new/new'
+				})
+				/* uni.navigateTo({
+					url: "../user/lease"
+				}) */
 			},
 			/**
 			 * 获取会员卡描述
@@ -315,13 +442,11 @@
 				const appId = globalData.appid;
 
 				uni.request({ //提交用户信息获取用户id
-					url: globalData.api + '/Wx/GetAccount',
+					url: globalData.publicApi + '/WeChat/GetAccount',
 					method: 'POST',
 					data: {
 						appid: appId,
 						openid: openId,
-						clienttype: 1,
-
 					},
 					success(res) {
 						console.log('getAccount', res);
@@ -329,11 +454,8 @@
 							const resData = res.data.data;
 							that.userInfo = resData;
 							globalData.avatar = resData.avatarUrl;
-
 							globalData.userInfo = resData;
 							that.is = true;
-							/////////////////////////
-							/* that.getMembershipDescription(); */
 						} else {
 							that.userInfo = {};
 							globalData.userInfo = {};
@@ -341,18 +463,39 @@
 					}
 				})
 			},
+			getPhone() {
+				const that = this;
+				const openId = this.openId;
+				const appId = globalData.appid;
 
+				uni.request({ //提交用户信息获取用户id
+					url: globalData.publicApi + '/WeChat/GetPhone',
+					method: 'POST',
+					data: {
+						appid: appId,
+						openid: openId,
+					},
+					success(res) {
+						console.log('getPhone', res);
+						if (res.data.errCode == 0) {
+							console.log(res.data.data);
+							that.userPhone = res.data.data;
+							console.log(that.userInfo);
+						} else {
+
+						}
+					}
+				})
+			},
 			getNewInfoCount() {
 				const that = this;
 				const openId = this.openId;
 				const appId = globalData.appid;
 				uni.request({ //提交用户信息获取用户id
-					url: globalData.api + '/MCM/GetNewInfoCount',
+					url: globalData.url3 + '/Message/GetMessageCount',
 					method: 'POST',
 					data: {
-						appid: appId,
-						openid: openId,
-						clienttype: 1,
+						uid: globalData.uid
 					},
 					success(res) {
 						console.log('GetNewInfoCount', res);
@@ -368,6 +511,7 @@
 			 * 去登录
 			 */
 			toLogin() {
+				console.log('点击');
 				if (!this.register) {
 					uni.navigateTo({
 						url: '../user/login'
@@ -379,29 +523,22 @@
 			 * 去邮箱
 			 */
 			toEmail() {
-				let temindex = globalData.powerList[0];
-				if (temindex === true) {
-					if (this.register) {
-						uni.navigateTo({
-							url: '../user/message'
-						})
-					} else {
-						uni.showModal({
-							title: '提示',
-							content: '请先登录后操作',
-							success: function(res) {
-								if (res.confirm) {
-									uni.navigateTo({
-										url: '../user/login'
-									})
-								}
-							}
-						})
-					}
+
+				if (this.register) {
+					uni.navigateTo({
+						url: '../user/message'
+					})
 				} else {
-					uni.showToast({
-						icon: 'none',
-						title: '功能暂未开放',
+					uni.showModal({
+						title: '提示',
+						content: '请先登录后操作',
+						success: function(res) {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '../user/login'
+								})
+							}
+						}
 					})
 				}
 			},
@@ -422,9 +559,70 @@
 				}
 			},
 
-			toFloored(index) {
+			toFloored(item, index) {
 				console.log(index);
-				let temindex = globalData.powerList[0];
+				if (this.register) {
+					globalData.powerList.forEach(item2 => {
+						console.log(item.name);
+						if (item2.page === 'my') {
+							item2.items.forEach(item3 => {
+								if (item3.name === item.name) {
+									if (!item3.enable) {
+										return uni.showToast({
+											title: item3.tip,
+											icon: 'none'
+										})
+									} else if (index == 3) {
+										uni.navigateTo({
+											url: "../coupon/coupon"
+										})
+									} else if (index == 2) {
+										uni.navigateTo({
+											url: "../user/card"
+										})
+									} else if (index == 1) {
+										uni.navigateTo({
+											url: "../user/guard"
+										})
+									}else if (index == 4) {
+										/* this.getOpenLock(); */
+										uni.navigateToMiniProgram({
+											appId: 'wxf7dd6d6f511d53dc',
+											success(res) {
+												console.log("打开成功")
+											},
+											fail(err) {
+												uni.showToast({
+													title: err,
+												})
+											}
+										})
+									}
+								}
+							})
+
+						}else if(index===0){
+							uni.navigateTo({
+								url:'../myAddress/myAddress'
+							})
+						}
+					})
+				} else {
+					uni.showModal({
+						title: '提示',
+						content: '请先登录后操作',
+						success: function(res) {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '../user/login'
+								})
+							}
+						}
+					})
+				}
+
+
+				/* let temindex = globalData.powerList[0];
 				if (temindex === true) {
 					if (this.register) {
 						if (index == 3) {
@@ -444,7 +642,6 @@
 								url: "../user/lease"
 							})
 						} else if (index == 4) {
-							/* this.getOpenLock(); */
 							uni.navigateToMiniProgram({
 								appId: 'wxf7dd6d6f511d53dc',
 								success(res) {
@@ -476,53 +673,29 @@
 						title: '功能暂未开放',
 					})
 				}
-
+ */
 			},
 			toOrderList(index) {
-				let temindex = globalData.powerList[0];
-				if (temindex === true) {
-					if (this.register) {
-						uni.navigateTo({
-							url: "../order/orderList?state=" + index
-						})
-					} else {
-						uni.showModal({
-							title: '提示',
-							content: '请先登录后操作',
-							success: function(res) {
-								if (res.confirm) {
-									uni.navigateTo({
-										url: '../user/login'
-									})
-								}
-							}
-						})
-					}
+				if (this.register) {
+					uni.navigateTo({
+						url: "../order/orderList?state=" + index
+					})
 				} else {
-					uni.showToast({
-						icon: 'none',
-						title: '功能暂未开放',
+					uni.showModal({
+						title: '提示',
+						content: '请先登录后操作',
+						success: function(res) {
+							if (res.confirm) {
+								uni.navigateTo({
+									url: '../user/login'
+								})
+							}
+						}
 					})
 				}
 
 
-			},
-			loadUser() {
-				this.$request
-					.post("/MCM/GetMembershipCard", {
-						header: {
-							'content-type': 'application/json'
-						},
-						data: {
-							appid: "wx9c6352d928983b70",
-							clienttype: 1,
-						},
-						dataType: 'json',
-						responseType: 'text'
-					})
-					.then(res => {
-						this.user = res.data.data;
-					})
+
 			},
 			getVip() {
 				console.log("123123")
@@ -538,12 +711,16 @@
 </script>
 
 <style lang="less" scoped>
+	page {
+		display: inline-block;
+	}
+
 	.top {
 		width: 100%;
 		height: 250rpx;
 		display: flex;
 		align-items: center;
-		background: url(http://121.37.210.175:8001/image/wxc469315ccc0dee04/1a823f9e68f00002.jpg);
+		background-repeat: no-repeat;
 		background-size: 100%;
 	}
 
@@ -627,6 +804,10 @@
 		color: rgba(241, 242, 242, 1);
 	}
 
+	.xxxxx {
+		color: #adadad;
+	}
+
 	.email {
 		position: absolute;
 		right: 30rpx;
@@ -681,20 +862,23 @@
 			transform: translateY(-120%);
 			opacity: 0.9;
 			z-index: 1;
-			.card-item{
+
+			.card-item {
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				height: 100%;
 				width: 33.3%;
-				
+
 			}
-			.card-detail{
+
+			.card-detail {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
 				font-size: 21rpx;
-				.name{
+
+				.name {
 					font-weight: 700;
 				}
 			}
@@ -713,6 +897,21 @@
 		box-shadow: 2rpx 3rpx 10rpx #8f8f8f;
 		border-radius: 15rpx;
 		transform: translateY(-40rpx);
+		opacity: 0.9;
+		z-index: 1;
+	}
+
+	.yyy {
+		position: absolute;
+		align-items: center;
+		display: flex;
+		justify-content: center;
+		height: 200rpx;
+		width: 90%;
+		background: white;
+		box-shadow: 2rpx 3rpx 10rpx #8f8f8f;
+		border-radius: 15rpx;
+		transform: translateY(-160rpx);
 		opacity: 0.9;
 		z-index: 1;
 	}
@@ -751,7 +950,7 @@
 		display: flex;
 		background: white;
 		flex-wrap: wrap;
-		transform: translateY(-360rpx);
+		transform: translateY(-300rpx);
 	}
 
 	.floored_item {
@@ -778,11 +977,6 @@
 		font-size: 16px;
 		border-bottom: 1rpx solid #f5f5f5;
 	}
-
-	/* 	.floored_item:nth-of-type(2n-1) .floored_name {
-		margin-left: 129rpx;
-	} */
-
 	.lock-image {
 		width: 500rpx;
 		height: 500rpx;

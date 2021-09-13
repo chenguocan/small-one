@@ -247,52 +247,6 @@
 				}
 			},
 			
-			load(type = 'add', status) {
-				if (this.pagination < this.pages) {
-					this.status = 'loadmore';
-					this.pagination = ++this.pagination;
-				}
-
-				// console.log(this.status);
-
-				if (type == 'add') {
-					if (this.status == 'nomore') {
-						return;
-					}
-					this.status = 'loading'
-				} else {
-					this.status = 'more';
-				}
-				this.status = 'loading'
-				this.$request
-					.post("/MCR/GetRoomList", {
-						header: {
-							'content-type': 'application/json'
-						},
-						data: {
-							appid: globalData.appid,
-							group: this.group,
-							type:  this.type,
-							clienttype:1,
-							openid:globalData.openid
-						},
-						dataType: 'json',
-						responseType: 'text'
-					})
-					.then(res => {
-						let good_list = res.data.data
-						// console.log(res);
-						setTimeout(() => {
-							// that.good_list = that.good_list.concat(good_list);
-							this.good_list = this.good_list.concat(good_list);
-							this.status = this.good_list.length > 40 ? 'nomore' : 'loadmore';
-						}, 1000)
-					})
-					.catch(error => {
-						console.error('error:', error);
-					});
-				let that = this;
-			}
 		},
 		onReachBottom() {
 			// this.load();
