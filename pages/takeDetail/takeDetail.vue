@@ -410,7 +410,7 @@
 		},
 		methods: {
 			submitOrder() {
-				if (this.addressItem.name !== '') {
+				if (this.addressItem.name !== '' && this.isSend===true) {
 					let transactDetails = [];
 					let that = this;
 					let order = uni.getStorageSync('takeout_jtjd_order');
@@ -435,6 +435,9 @@
 						success(res) {
 							if (res.data.errCode === 0) {
 								console.log(res)
+								uni.navigateTo({
+									url:'../takeOrderDetail/takeOrderDetail'
+								})
 							}
 						}
 					})

@@ -1,5 +1,79 @@
 <template>
-	<view style="height: 500rpx;">
+	<view class="user">
+		<view class="top" :style="'background-image:url('+background+')'">
+		</view>
+		<!-- 头部个人信息及会员卡信息 -->
+		<header>
+			<view class="my" @click="toLogin">
+				<view>
+					<u-avatar size="90"  :src="userInfo.avatarUrl"></u-avatar>
+				</view>
+				<view class="detail">
+					<view class="name" >{{register ? userInfo.nickName : '立即登录'}}</view>
+					<view class="phone">{{register ? userPhone : ''}}</view>
+				</view>
+			</view>
+			<!-- <view class="card-list">
+				<view class="card-item" :style="{width:(710/cardList.length)+'rpx'}" v-for="(item,index) in cardList" :key="index" @click="toCard(item,index)">
+					<view class="num">{{item.num}}</view>
+					<view class="name">{{item.name}}</view>
+				</view>
+				
+			</view> -->
+		</header>
+		
+		
+		
+		<main>
+			<view class='server-title'>
+				我的商城订单
+			</view>
+			<view class="server-list" >		
+				<view class="server-item" v-for="(item,index) in barList" :key="index" @click="toOrderList(index+1)">
+					<view class="iconfont server-icon" :style="{color:item.color}"  :class="item.icon"></view>
+					<view class="server-name">{{item.name}}</view>
+				</view>	
+			</view>
+		</main>
+		
+		<!-- 服务 -->
+		<main>
+			<view class='server-title'>
+				我的酒店计划
+			</view>
+			<view class="server-list" >
+				<view class="server-item" v-for="(item,index) in planList" :key="index" @click="toOrderList(index+1)">
+					<view class="normal-icon iconfont" :style="{color:item.color}" :class="item.icon"></view>
+					<view class="server-name">{{item.name}}</view>
+				</view>
+			</view>
+		</main>
+		
+		<main>
+			<view class='server-title'>
+				我的个人财富
+			</view>
+			<view class="server-list" >
+				<view class="server-item" v-for="(item,index) in cardList" :key="index"  @click="toCard(item,index)">
+					<view class="server-icon iconfont" :class="item.icon"></view>
+					<view class="server-name">{{item.name}}</view>
+				</view>
+			</view>
+		</main>
+		<main>
+			<view class='server-title'>
+				我的服务管家
+			</view>
+			<view class="server-list" >
+				<view class="server-item" v-for="(item,index) in list" :key="index"  @click="toFloored(item,item.index)">
+					<view class="server-icon iconfont" :class="item.icon"></view>
+					<view class="server-name">{{item.name}}</view>
+				</view>
+			</view>
+		</main>
+		
+	</view>
+<!-- 	<view style="height: 500rpx;">
 		<view class="top" :style="'background-image:url('+background+')'">
 			<view class="email" @click="toEmail" v-if="register">
 				<text class="num" v-if="msgNum!=0">{{msgNum}}</text>
@@ -67,7 +141,6 @@
 				<view class="floored_name">
 					<text class="name" :style="{color:item.color}">{{item.name}}</text>
 					<i class="iconfont iconarrowRight-copy-copy-copy" style="font-size: 30rpx;"></i>
-					<!-- <u-icon size="30" color="black" name="arrow-right"></u-icon> -->
 				</view>
 			</view>
 		</view>
@@ -87,7 +160,7 @@
 		<u-popup v-model="showPopup" mode="center">
 			<image :src="lockImage" class="lock-image"></image>
 		</u-popup>
-	</view>
+	</view> -->
 </template>
 
 <script>
@@ -96,6 +169,7 @@
 	export default {
 		data() {
 			return {
+				couponList:[],
 				openId: '', // 微信openid
 				register: '', // 是否注册
 				userInfo: {}, // 用户信息
@@ -105,60 +179,67 @@
 				barList: [{
 						name: "未支付",
 						icon: 'iconweizhifu',
-						index: 1
+						index: 1,
+						color:'#bf8428'
 					},
 					{
 						name: "已支付",
 						icon: 'iconyizhifu',
-						index: 2
+						index: 2,
+						color:'#135297',
 					},
 
 					{
 						name: "已取消",
 						icon: "iconyiquxiao",
-						index: 4
+						index: 4,
+						color:'#ab4a37'
 					}
 				],
 				planList: [{
 						name: "待执行",
-						icon: 'icondaizhihangde',
-						index: 1
+						icon: 'iconzhuangtaidaizhihang',
+						index: 1,
+						color:'#bf8428',
 					},
 					{
 						name: "执行中",
-						icon: 'iconziliao',
-						index: 2
+						icon: 'iconzhihangzhong-shudian',
+						index: 2,
+						color:'#1f7fa9',
 					},
 					{
 						name: "已执行",
-						icon: "iconyizhihangde",
-						index: 3
+						icon: "iconyizhixing",
+						index: 3,
+						color:'#135297',
 					},
 					{
 						name: "已取消",
-						icon: "icontubiao-quxiao",
-						index: 4
+						icon: "iconyiquxiao1",
+						index: 4,
+						color:'#ab4a37'
 					}
 				],
 				cardList: [{
 					name: '会员卡',
-					icon: 'iconhuiyuankax',
+					icon: 'iconhuiyuanka',
 					color: '#41cdff',
 					num: '0',
 				}, {
 					name: '积分',
-					icon: 'iconziyuan',
+					icon: 'iconjifen',
 					color: '',
 					num: '0',
 				}, {
 					name: '优惠券',
-					icon: 'iconquan',
+					icon: 'iconyouhuiquan1',
 					color: '#ff6f6f',
 					num: '0',
 				}],
 				list: [{
 					name:'我的地址',
-					icon:'',
+					icon:'icondizhi',
 					index:0
 				},
 					/* {
@@ -168,7 +249,7 @@
 										}, */
 					{
 						name: "门禁管理",
-						icon: "iconmenjin",
+						icon: "iconmenjinguanli",
 						index: 1
 					},
 					/* {
@@ -178,7 +259,7 @@
 					}, */
 					{
 						name: "我的房卡",
-						icon: "iconcard-pluck",
+						icon: "iconmenjin1",
 						index: 4
 					}
 					/* ,
@@ -233,9 +314,11 @@
 				this.getAccount();
 				this.getPhone();
 				this.getNewInfoCount();
+				// this.getTickets()
 			}
 			// #endif
-
+			// this.$set(this.planList[3],'num',this.couponList.length)
+			// console.log(this.couponList)
 			/////////////////////////////////
 
 			/* this.getLockAuthorizeRoom(); */
@@ -245,6 +328,32 @@
 			// if (openId) this.getAccount();
 		},
 		methods: {
+			
+			getTickets() {
+				let that = this;
+				uni.request({
+					method: 'POST',
+					url: globalData.url3+'/ticket/GetTickets',
+					data: {
+						uid: globalData.uid,
+						state: "1"
+					},
+					success(res) {
+						console.log(res)
+						if (res.data.errCode === 0) {
+							that.couponList = res.data.data;
+							that.$set(that.cardList[2],'num',that.couponList.length)
+							console.log(that.cardList)
+						} else {
+							uni.showToast({
+								title: res.data.errMsg,
+								icon: 'none'
+							})
+						}
+					}
+				})
+			},
+			
 			getBackground() {
 				let that = this;
 				uni.request({
@@ -511,7 +620,6 @@
 			 * 去登录
 			 */
 			toLogin() {
-				console.log('点击');
 				if (!this.register) {
 					uni.navigateTo({
 						url: '../user/login'
@@ -710,275 +818,363 @@
 	}
 </script>
 
-<style lang="less" scoped>
-	page {
-		display: inline-block;
-	}
-
-	.top {
-		width: 100%;
-		height: 250rpx;
+<style lang="scss" scoped>
+	.user{
 		display: flex;
+		flex-direction: column;
 		align-items: center;
+	}
+	.top{
+		height: 200rpx;
 		background-repeat: no-repeat;
 		background-size: 100%;
 	}
-
-	.header {
-		display: flex;
-		height: 200rpx;
-		justify-content: center;
-		align-items: center;
-		margin-left: 30rpx;
-	}
-
-	.headimg {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		width: 100rpx;
-		height: 100rpx;
-		border-radius: 50%;
-	}
-
-	.img {
-		display: block;
-		width: 100rpx;
-		height: 100rpx;
-		border-radius: 50%;
-	}
-
-	.user_name {
-		display: flex;
-		flex-direction: column;
-		font-size: 16px;
-		margin-left: 20rpx;
-		color: gray;
-		line-height: 38rpx;
-	}
-
-	/* .vipCard{
-		display: flex;
-		align-items: center;
-		color:black;
-		font-size: 20px;
-		margin-bottom: 40rpx;
-	} */
-	.vipCard {
-		display: flex;
-		justify-content: space-between;
-		color: white;
-		height: 120rpx;
-		width: 500rpx;
-		background: url(https://img-u-4.51miz.com/preview/element/00/01/05/87/E-1058743-9EBF2547.jpg!/quality/90/unsharp/true/compress/true/format/jpg/fh/320) no-repeat;
-		line-height: 60rpx;
-		border-radius: 10rpx;
-		margin: 0 auto;
-		transform: translateY(50%);
-	}
-
-	.level {
-		margin: 0 20rpx;
-	}
-
-	.phone {
-		margin-left: 20rpx;
-		margin-bottom: 15rpx;
-		font-size: 12px;
-		color: rgba(242, 242, 242, 1.0);
-	}
-
-	.vip {
-		display: flex;
-		align-items: center;
-		color: white;
-	}
-
-	.rightIcon {
-		margin-left: 80rpx;
-	}
-
-	.car-desc {
-		margin-top: 10rpx;
-		font-size: 23rpx;
-		color: rgba(241, 242, 242, 1);
-	}
-
-	.xxxxx {
-		color: #adadad;
-	}
-
-	.email {
-		position: absolute;
-		right: 30rpx;
-		top: 56rpx;
-		z-index: 11;
-		width: 52rpx;
-		height: 42rpx;
-		background: url("https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/email.png") no-repeat;
-		background-size: cover;
-	}
-
-	.email>.num {
-		position: absolute;
-		top: -20rpx;
-		right: -20rpx;
-		display: block;
-		width: 40rpx;
-		height: 40rpx;
-		line-height: 40rpx;
-		color: #fff;
-		text-align: center;
-		font-size: 24rpx;
-		border-radius: 50%;
-		background-color: #f00;
-	}
-
-	.pencil {
-		position: absolute;
-		right: 120rpx;
-		top: 56rpx;
-		z-index: 11;
-		width: 45rpx;
-		height: 45rpx;
-		background: url("https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/pencil.png") no-repeat;
-		background-size: cover;
-	}
-
-	///////////////////////////////
-	.navContent {
-		display: flex;
-		justify-content: center;
-		width: 100%;
-
-		.card {
-			position: absolute;
-			display: flex;
+	header{
+		width: 690rpx;
+		background-color: white;
+		height: 150rpx;
+		border-radius: 6rpx;
+		transform: translateY(-50%);
+		.my{
 			height: 150rpx;
-			width: 90%;
-			background: white;
-			box-shadow: 2rpx 3rpx 10rpx #8f8f8f;
-			border-radius: 15rpx;
-			transform: translateY(-120%);
-			opacity: 0.9;
-			z-index: 1;
-
-			.card-item {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				height: 100%;
-				width: 33.3%;
-
-			}
-
-			.card-detail {
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				font-size: 21rpx;
-
-				.name {
+			padding: 0 20rpx;
+			display: flex;
+			align-items: center;
+			.detail{
+				margin-left: 20rpx;
+				.name{
 					font-weight: 700;
+				}
+				.phone{
+					color: #9f92af;
+					font-size: 24rpx;
 				}
 			}
 		}
-
+		.card-list{
+			display: flex;
+			height: 130rpx;
+			.card-item{
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				display: flex;
+				flex-direction: column;
+				.num{
+					font-weight: 700;
+					color:#5a5b5c;
+				}
+				.name{
+					color: #9f92af;
+					font-size: 24rpx;
+				}
+			}
+		}
 	}
-
-	.xxx {
-		position: absolute;
-		align-items: center;
-		display: flex;
-		justify-content: center;
-		height: 200rpx;
-		width: 90%;
+	
+	main{
+		width: 100%;
 		background: white;
-		box-shadow: 2rpx 3rpx 10rpx #8f8f8f;
-		border-radius: 15rpx;
-		transform: translateY(-40rpx);
-		opacity: 0.9;
-		z-index: 1;
+		padding: 20rpx;
+		transform: translateY(-75rpx);
+		margin-top: 25rpx;
+		.server-title{
+			font-weight: 700;
+		}
+		.server-list{
+			display: flex;
+			flex-wrap: wrap;
+			.server-item{
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-direction: column;
+				margin-top: 10rpx;
+				width:25%;
+				height: 125rpx;
+				.server-icon{
+					font-size: 56rpx;
+					color:#a68a41;
+				}
+				.normal-icon{
+					font-size: 56rpx;
+				}
+				.server-name{
+					margin-top: 10rpx;
+					color: #9192a1;
+					font-size: 24rpx;
+				}
+			}
+		}
 	}
+	// page {
+	// 	display: inline-block;
+	// }
 
-	.yyy {
-		position: absolute;
-		align-items: center;
-		display: flex;
-		justify-content: center;
-		height: 200rpx;
-		width: 90%;
-		background: white;
-		box-shadow: 2rpx 3rpx 10rpx #8f8f8f;
-		border-radius: 15rpx;
-		transform: translateY(-160rpx);
-		opacity: 0.9;
-		z-index: 1;
-	}
+	// .top {
+	// 	width: 100%;
+	// 	height: 250rpx;
+	// 	display: flex;
+	// 	align-items: center;
+	// 	background-repeat: no-repeat;
+	// 	background-size: 100%;
+	// }
 
-	.navbar {
-		width: 100%;
-		height: 365rpx;
-	}
+	// .header {
+	// 	display: flex;
+	// 	height: 200rpx;
+	// 	justify-content: center;
+	// 	align-items: center;
+	// 	margin-left: 30rpx;
+	// }
 
-	.bar {
-		display: flex;
-		width: 25%;
-		height: 165rpx;
-		justify-content: center;
-		flex-direction: column;
-		/* justify-content: center; */
-		align-items: center;
-	}
+	// .headimg {
+	// 	display: flex;
+	// 	justify-content: center;
+	// 	align-items: center;
+	// 	width: 100rpx;
+	// 	height: 100rpx;
+	// 	border-radius: 50%;
+	// }
 
-	.bar_view {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 80rpx;
-		height: 82rpx;
-	}
+	// .img {
+	// 	display: block;
+	// 	width: 100rpx;
+	// 	height: 100rpx;
+	// 	border-radius: 50%;
+	// }
 
-	.bar_name {
-		padding-top: 4rpx;
-		display: block;
-		font-size: 21rpx;
-	}
+	// .user_name {
+	// 	display: flex;
+	// 	flex-direction: column;
+	// 	font-size: 16px;
+	// 	margin-left: 20rpx;
+	// 	color: gray;
+	// 	line-height: 38rpx;
+	// }
 
-	////////////////////////////////////
-	.floored {
-		display: flex;
-		background: white;
-		flex-wrap: wrap;
-		transform: translateY(-300rpx);
-	}
+	// /* .vipCard{
+	// 	display: flex;
+	// 	align-items: center;
+	// 	color:black;
+	// 	font-size: 20px;
+	// 	margin-bottom: 40rpx;
+	// } */
+	// .vipCard {
+	// 	display: flex;
+	// 	justify-content: space-between;
+	// 	color: white;
+	// 	height: 120rpx;
+	// 	width: 500rpx;
+	// 	background: url(https://img-u-4.51miz.com/preview/element/00/01/05/87/E-1058743-9EBF2547.jpg!/quality/90/unsharp/true/compress/true/format/jpg/fh/320) no-repeat;
+	// 	line-height: 60rpx;
+	// 	border-radius: 10rpx;
+	// 	margin: 0 auto;
+	// 	transform: translateY(50%);
+	// }
 
-	.floored_item {
-		display: flex;
-		padding: 0 30rpx;
-		align-items: center;
-		width: 100%;
+	// .level {
+	// 	margin: 0 20rpx;
+	// }
 
-	}
+	// .phone {
+	// 	margin-left: 20rpx;
+	// 	margin-bottom: 15rpx;
+	// 	font-size: 12px;
+	// 	color: rgba(242, 242, 242, 1.0);
+	// }
 
-	.floored_img {}
+	// .vip {
+	// 	display: flex;
+	// 	align-items: center;
+	// 	color: white;
+	// }
 
-	/* 	.floored_item:nth-of-type(2n-1) .floored_img {
-		margin-left: 129rpx;
-	} */
+	// .rightIcon {
+	// 	margin-left: 80rpx;
+	// }
 
-	.floored_name {
-		display: flex;
-		justify-content: space-between;
-		margin: 0 20rpx;
-		padding: 30rpx;
-		width: 100%;
-		width: 100%;
-		font-size: 16px;
-		border-bottom: 1rpx solid #f5f5f5;
-	}
-	.lock-image {
-		width: 500rpx;
-		height: 500rpx;
-	}
+	// .car-desc {
+	// 	margin-top: 10rpx;
+	// 	font-size: 23rpx;
+	// 	color: rgba(241, 242, 242, 1);
+	// }
+
+	// .xxxxx {
+	// 	color: #adadad;
+	// }
+
+	// .email {
+	// 	position: absolute;
+	// 	right: 30rpx;
+	// 	top: 56rpx;
+	// 	z-index: 11;
+	// 	width: 52rpx;
+	// 	height: 42rpx;
+	// 	background: url("https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/email.png") no-repeat;
+	// 	background-size: cover;
+	// }
+
+	// .email>.num {
+	// 	position: absolute;
+	// 	top: -20rpx;
+	// 	right: -20rpx;
+	// 	display: block;
+	// 	width: 40rpx;
+	// 	height: 40rpx;
+	// 	line-height: 40rpx;
+	// 	color: #fff;
+	// 	text-align: center;
+	// 	font-size: 24rpx;
+	// 	border-radius: 50%;
+	// 	background-color: #f00;
+	// }
+
+	// .pencil {
+	// 	position: absolute;
+	// 	right: 120rpx;
+	// 	top: 56rpx;
+	// 	z-index: 11;
+	// 	width: 45rpx;
+	// 	height: 45rpx;
+	// 	background: url("https://office-lot.oss-cn-shenzhen.aliyuncs.com/icon/pencil.png") no-repeat;
+	// 	background-size: cover;
+	// }
+
+	// ///////////////////////////////
+	// .navContent {
+	// 	display: flex;
+	// 	justify-content: center;
+	// 	width: 100%;
+
+	// 	.card {
+	// 		position: absolute;
+	// 		display: flex;
+	// 		height: 150rpx;
+	// 		width: 90%;
+	// 		background: white;
+	// 		box-shadow: 2rpx 3rpx 10rpx #8f8f8f;
+	// 		border-radius: 15rpx;
+	// 		transform: translateY(-120%);
+	// 		opacity: 0.9;
+	// 		z-index: 1;
+
+	// 		.card-item {
+	// 			display: flex;
+	// 			align-items: center;
+	// 			justify-content: center;
+	// 			height: 100%;
+	// 			width: 33.3%;
+
+	// 		}
+
+	// 		.card-detail {
+	// 			display: flex;
+	// 			flex-direction: column;
+	// 			align-items: center;
+	// 			font-size: 21rpx;
+
+	// 			.name {
+	// 				font-weight: 700;
+	// 			}
+	// 		}
+	// 	}
+
+	// }
+
+	// .xxx {
+	// 	position: absolute;
+	// 	align-items: center;
+	// 	display: flex;
+	// 	justify-content: center;
+	// 	height: 200rpx;
+	// 	width: 90%;
+	// 	background: white;
+	// 	box-shadow: 2rpx 3rpx 10rpx #8f8f8f;
+	// 	border-radius: 15rpx;
+	// 	transform: translateY(-40rpx);
+	// 	opacity: 0.9;
+	// 	z-index: 1;
+	// }
+
+	// .yyy {
+	// 	position: absolute;
+	// 	align-items: center;
+	// 	display: flex;
+	// 	justify-content: center;
+	// 	height: 200rpx;
+	// 	width: 90%;
+	// 	background: white;
+	// 	box-shadow: 2rpx 3rpx 10rpx #8f8f8f;
+	// 	border-radius: 15rpx;
+	// 	transform: translateY(-160rpx);
+	// 	opacity: 0.9;
+	// 	z-index: 1;
+	// }
+
+	// .navbar {
+	// 	width: 100%;
+	// 	height: 365rpx;
+	// }
+
+	// .bar {
+	// 	display: flex;
+	// 	width: 25%;
+	// 	height: 165rpx;
+	// 	justify-content: center;
+	// 	flex-direction: column;
+	// 	/* justify-content: center; */
+	// 	align-items: center;
+	// }
+
+	// .bar_view {
+	// 	display: flex;
+	// 	align-items: center;
+	// 	justify-content: center;
+	// 	width: 80rpx;
+	// 	height: 82rpx;
+	// }
+
+	// .bar_name {
+	// 	padding-top: 4rpx;
+	// 	display: block;
+	// 	font-size: 21rpx;
+	// }
+
+	// ////////////////////////////////////
+	// .floored {
+	// 	display: flex;
+	// 	background: white;
+	// 	flex-wrap: wrap;
+	// 	transform: translateY(-300rpx);
+	// }
+
+	// .floored_item {
+	// 	display: flex;
+	// 	padding: 0 30rpx;
+	// 	align-items: center;
+	// 	width: 100%;
+
+	// }
+
+	// .floored_img {}
+
+	// /* 	.floored_item:nth-of-type(2n-1) .floored_img {
+	// 	margin-left: 129rpx;
+	// } */
+
+	// .floored_name {
+	// 	display: flex;
+	// 	justify-content: space-between;
+	// 	margin: 0 20rpx;
+	// 	padding: 30rpx;
+	// 	width: 100%;
+	// 	width: 100%;
+	// 	font-size: 16px;
+	// 	border-bottom: 1rpx solid #f5f5f5;
+	// }
+	// .lock-image {
+	// 	width: 500rpx;
+	// 	height: 500rpx;
+	// }
 </style>

@@ -1278,12 +1278,29 @@
 						uni.showLoading({
 							title: '加载中...'
 						});
-						uni.navigateTo({
-							url: '../takeDetail/takeDetail',
-							complete: function(res) {
-								uni.hideLoading();
+						uni.request({
+							method: 'POST',
+							url: prefix + '/PMS/SetCateringOrder',
+							data: {
+								uid: globalData.uid,
+								target: that.target,
+							},
+							success(res) {
+								if (res.data.errCode === 0) {
+									uni.navigateTo({
+										url: '../takeDetail/takeDetail',
+									});
+								}else{
+									uni.showToast({
+										title:res.data.errMsg,
+										icon:'none'
+									})
+								}
+							},
+							complete() {
+								uni.hideLoading()
 							}
-						});
+						})
 					}
 
 

@@ -209,11 +209,18 @@ export default {
 					height: '100%',
 					transform: `translate3D(${this.mode == 'left' ? '-100%' : '100%'},0px,0px)`
 				};
-			} else if (this.mode == 'top' || this.mode == 'bottom') {
+			} else if (this.mode == 'top' ) {
 				style = {
 					width: '100%',
 					height: this.height ? this.getUnitValue(this.height) : this.getUnitValue(this.length),
 					transform: `translate3D(0px,${this.mode == 'top' ? '-100%' : '100%'},0px)`
+				};
+			} else if(this.mode==='bottom'){
+				style = {
+					width: this.width ? this.getUnitValue(this.width) : this.getUnitValue(this.length),
+					height: this.height ? this.getUnitValue(this.height) : this.getUnitValue(this.length),
+					transform: `translate3D(0px,${this.mode == 'top' ? '-100%' : '100%'},0px)`,
+					margin:`0 auto`
 				};
 			}
 			style.zIndex = this.uZindex;

@@ -176,7 +176,7 @@
 				let that = this;
 				uni.request({
 					method: 'POST',
-					url: 'https://www.hotelcard.cn/TheHeavens/JunTai/ticket/GetTickets',
+					url: globalData.url3+'/ticket/GetTickets',
 					data: {
 						uid: globalData.uid,
 						state: that.state

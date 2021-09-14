@@ -1,108 +1,74 @@
 <template>
 	<view class="container">
-		<view style="height: 20rpx;"></view>
-		<scroll-view class="address-list" scroll-y :style="{height:scrollHeight+'px'}">
-			<view class="a-address" v-for="(item,index) in addressList" :key="index">
-				<view>
-					<view class="address-name">
-						<!-- <view class="label">{{item.remark}}</view> -->
-						<text class="address-detail">{{item.name}}-{{item.address}}</text>
+		<view class="address-list" style="padding-bottom: 120rpx;">
+			<u-swipe-action :options="options" v-for="(item, index) in siteList" :key="res.id">
+				<view class="item">
+					<view class="top">
+						<view class="name">{{ item.name }}</view>
+						<view class="phone">{{ item.phone }}</view>
+						<view class="tag">
+							<text :class="{red:item.default=='默认'}" v-if="item.default">默认</text>
+						</view>
 					</view>
-					<!-- <view class="link">
-						<view>
-							{{item.link}}
+					<view class="bottom">
+						<view class="address">
+							<text>{{item.name}}</text>
+							<text>{{item.number}}</text>
+							<text>{{item.remark}}</text>
 						</view>
-						<view>
-							{{parseInt(item.title)===0?'先生':'女士'}}
-						</view>
-						<view style="margin-left: 20rpx;">
-							{{item.phone}}
-						</view>
-					</view> -->
-					<!-- <view style="margin-top: 10rpx;" v-if="url">
-						<u-button type="primary" shape="circle" size="mini" @click="setAddress(item)">设为地址</u-button>
-					</view> -->
+						<u-icon name="edit-pen" :size="40" color="#999999" @click="editAddess(item)"></u-icon>
+					</view>
 				</view>
-				<view style="display: flex;align-items: center; margin-right: 20rpx;">
-					<u-icon name="edit-pen" size="40" color="#d0d0d0" @tap="editAddess(item)"
-						style="margin-right: 20rpx;"></u-icon>
-				</view>
-			</view>
-		</scroll-view>
-		<view class="bottom-box" @click="addAddess">
-			<view style="display: flex;align-items: center;">
-				<u-icon name="plus-circle" size="36"></u-icon>
-				新增收货地址
-			</view>
-			<view>
-				<u-icon name="arrow-right" size="36" color="#d0d0d0"></u-icon>
+			</u-swipe-action>
+		</view>
+		<view class="addSite" @tap="toAddSite">
+			<view class="add">
+				<u-icon name="plus" color="#ffffff" class="icon" :size="30"></u-icon>新建收货地址
 			</view>
 		</view>
 
-		<u-popup @close="closeAddressPopup" v-model="show" mode="center" border-radius="10" closeable width="90%"
-			height="70%">
+		<u-popup @close="closeAddressPopup" v-model="show" border-radius="10" width="95%" height="80%" mode="bottom">
 			<view class="addForm">
-				<u-form label-width="100" :model="form" ref="uForm">
-					<u-form-item label="电话" prop="number">
-						<u-input v-model="form.number" type="number" placeholder="请输入您的联系方式" :clearable="false" />
-					</u-form-item>
+				<u-form label-width="150" :model="form" ref="uForm">
 					<u-form-item label="地址" prop="address">
-						<u-input type="select" placeholder="请输入填写/选择地址" v-model="form.address" :clearable="false"
+						<u-input type="select" placeholder="请选择地址" v-model="form.address" :clearable="false"
 							@click="addressShow=true" />
 					</u-form-item>
-					<u-form-item label="单元">
-						<u-input v-model="form.remark" placeholder="请补充具体地址" :clearable="false" />
+					<u-form-item label="门牌号" prop="number">
+						<u-input v-model="form.number" placeholder="请填写具体门牌号" :clearable="false" />
+					</u-form-item>
+					<u-form-item label="地址详情" prop="remark">
+						<u-input v-model="form.remark" placeholder="请填写具体地址详情" :clearable="false" />
+					</u-form-item>
+					<u-form-item label="标签" prop="type">
+						<uni-data-checkbox v-model="form.type" mode="tag" :localdata="labelRange"></uni-data-checkbox>
+					</u-form-item>
+					<u-form-item label="电话" prop="contact">
+						<u-input v-model="form.contact" type="number" placeholder="请输入您的联系方式" :clearable="false" />
+					</u-form-item>
+					<u-form-item label="联系人" prop="linkman">
+						<view style="display: flex;align-items: 
+						center;">
+							<u-input style="width: 200rpx;flex:1" v-model="form.linkman" placeholder="联系人"
+								:clearable="false" />
+							<uni-data-checkbox style="height: 50rpx;" v-model="form.title" :localdata="titleRange">
+							</uni-data-checkbox>
+						</view>
+					</u-form-item>
+					<u-form-item label="默认地址">
+						<u-switch size="30" v-model="form.default"></u-switch>
 					</u-form-item>
 				</u-form>
-				<view style="width: 500rpx;margin-top: 20rpx;display: flex;justify-content: space-between;">
-					<view style="width: 200rpx;">
 
-					</view>
-					<view style="width: 200rpx;">
-						<u-button type="primary" @click="submitAddress(0)">提交</u-button>
-					</view>
+				<view style="margin-top: 30rpx;">
+					<u-button type="primary" shape="circle" @click="submitAddress(currentIndex)"
+						v-if="currentIndex===0">修改地址</u-button>
+					<u-button type="primary" shape="circle" @click="submitAddress(currentIndex)" v-else>添加地址</u-button>
 				</view>
 			</view>
 		</u-popup>
-
-
-		<u-popup @close="closeAddressPopup" v-model="editShow" mode="center" border-radius="10" closeable width="90%"
-			height="70%">
-			<view class="addForm">
-				<u-form  label-width="150" :model="form" ref="editForm">
-					<u-form-item label="地址" prop="address">
-						<u-input type="select" placeholder="请输入填写/选择地址" v-model="form.address" :clearable="false"
-							@click="addressShow=true" />
-					</u-form-item>
-					<u-form-item label="单元">
-						<u-input v-model="form.remark" placeholder="请补充具体地址" :clearable="false" />
-					</u-form-item>
-					
-					<u-form-item label="电话" prop="number">
-						<u-input v-model="form.number" type="number" placeholder="请输入您的联系方式" :clearable="false" />
-					</u-form-item>
-					
-					<u-form-item label="联系人" prop="number">
-						<u-input v-model="form.number" type="number" placeholder="请输入您的联系方式" :clearable="false" />
-					</u-form-item>
-					
-					<u-form-item label="联系方式" prop="number">
-						<u-input v-model="form.number" type="number" placeholder="请输入您的联系方式" :clearable="false" />
-					</u-form-item>
-					
-				</u-form>
-				<view style="width: 500rpx;margin-top: 20rpx;display: flex;justify-content: space-between;">
-					<view style="width: 200rpx;">
-						<u-button type="error" @click="deleteAddress()">删除</u-button>
-					</view>
-					<view style="width: 200rpx;">
-						<u-button type="primary" @click="submitAddress(1)">提交</u-button>
-					</view>
-				</view>
-			</view>
-		</u-popup>
-
-		<u-select label-name="name" value-name="id" v-model="addressShow" :list="list" @confirm="confirmAddress"></u-select>
+		<u-select label-name="name" value-name="id" v-model="addressShow" :list="list" @confirm="confirmAddress">
+		</u-select>
 	</view>
 </template>
 
@@ -115,21 +81,31 @@
 		},
 		data() {
 			return {
+				options: [{
+					text: '删除',
+					style: {
+						backgroundColor: '#dd524d'
+					}
+				}],
+				siteList: [],
 				value: 0,
 				list: [],
 				titleRange: [{
-					"value": 0,
+					"value": 1,
 					"text": "先生"
 				}, {
-					"value": 1,
+					"value": 0,
 					"text": "女士"
 				}],
 				labelRange: [{
-					"value": "家",
+					"value": 1,
 					"text": "家"
 				}, {
-					"value": "公司",
+					"value": 2,
 					"text": "公司"
+				}, {
+					"value": 3,
+					"text": "学校"
 				}],
 				showModal: false,
 				content: '是否删除该地址',
@@ -140,12 +116,17 @@
 				addressRange: [],
 				currentItem: [],
 				form: {
+					linkman: '',
+					contact: '',
 					address_id: '',
-					address:'',
+					address: '',
 					number: '',
-					remark:'',
-					id:'',
-					
+					remark: '',
+					id: '',
+					type: 0,
+					title: 1,
+					default: false
+
 				},
 				currentAddress: [],
 				current: 0,
@@ -154,9 +135,10 @@
 				currentItem: [],
 				currentDefault: false,
 				scrollHeight: 500,
+				currentIndex: 0,
 				url: '',
 				rules: {
-					number: [{
+					contact: [{
 							required: true,
 							message: '请输入正确的手机号',
 							trigger: ['blur'],
@@ -168,26 +150,38 @@
 							message: '请输入正确的手机号',
 							trigger: ['blur'],
 						}
-					]
+					],
+					address: [{
+						required: true,
+						message: '请输入地址',
+						trigger: ['blur'],
+					}],
+					linkman: [{
+						required: true,
+						message: '请输入联系人',
+						trigger: ['blur'],
+					}],
+					number: [{
+						required: true,
+						message: '请输入门牌号',
+						trigger: ['blur'],
+					}],
+					remark: [{
+						required: true,
+						message: '请输入地址详情',
+						trigger: ['blur'],
+					}],
 				}
 			}
 		},
 		onReady() {
 			this.$refs.uForm.setRules(this.rules);
-			this.$refs.editForm.setRules(this.rules);
 		},
 		onLoad(options) {
 			console.log(options);
 			if (options.url) {
 				this.url = options.url;
 			}
-			console.log('123');
-			let that = this;
-			uni.getSystemInfo({
-				success(res) {
-					that.scrollHeight = res.windowHeight * 0.85
-				}
-			})
 			/* if(options.id){
 				this.id=options.id;
 			}*/
@@ -196,9 +190,9 @@
 			/*this.getAccountAddress(); */
 		},
 		methods: {
-			confirmAddress(e){
-				this.form.address=e[0].label;
-				this.form.address_id=e[0].value
+			confirmAddress(e) {
+				this.form.address = e[0].label;
+				this.form.address_id = e[0].value
 			},
 			setAddress(item) {
 				uni.showModal({
@@ -213,14 +207,20 @@
 			},
 			closeAddressPopup() {
 				this.form = {
+					linkman: '',
+					contact: '',
 					address_id: '',
+					address: '',
 					number: '',
-					remark:'',
-					id:'',
-					address:'',
+					remark: '',
+					id: '',
+					type: 0,
+					title: 1,
+					default: false
 				}
 			},
 			submitAddress(index) {
+				//index ====>为0 编辑  为 1添加
 				this.$refs.uForm.validate(valid => {
 					if (valid) {
 						let that = this;
@@ -228,9 +228,14 @@
 							uid: globalData.uid,
 							address_id: that.form.address_id,
 							number: that.form.number,
-							remark:that.form.remark
+							remark: that.form.remark,
+							type: that.form.type,
+							title: that.form.title,
+							default: that.form.default,
+							linkman: that.form.linkman,
+							contact: that.form.contact,
 						}
-						if (index === 1) {
+						if (index === 0) {
 							data.id = that.form.id;
 						}
 						uni.request({
@@ -308,7 +313,7 @@
 					success(res) {
 						console.log(res);
 						if (res.data.errCode === 0) {
-							that.addressList = res.data.data;
+							that.siteList = res.data.data;
 						}
 					}
 				})
@@ -324,7 +329,6 @@
 					success(res) {
 						if (res.data.errCode === 0) {
 							that.list = res.data.data;
-							console.log('list',that.list)
 						}
 
 					}
@@ -339,20 +343,25 @@
 			editAddess(item) {
 				// console.log(item)
 				// this.form = item
+				this.currentIndex = 0;
 				this.form = {
-					address_id: item.address,
+					address_id: item.address_id,
 					number: item.number,
-					remark:item.remark,
-					id:item.id,
-					address:item.name,
+					remark: item.remark,
+					type: item.type,
+					title: item.title,
+					default: item.default,
+					linkman: item.linkman,
+					contact: item.contact,
 				}
-				this.editShow = true;
+				this.show = true;
 				/* this.currentItem=item; */
 			},
 			handleAddress(e) {
 
 			},
-			addAddess() {
+			toAddSite() {
+				this.currentIndex = 1;
 				this.show = true;
 			}
 		}
@@ -360,6 +369,75 @@
 </script>
 
 <style lang="scss">
+	.item {
+		padding: 25rpx;
+		.top {
+			display: flex;
+			font-weight: bold;
+			font-size: 34rpx;
+
+			.phone {
+				margin-left: 60rpx;
+			}
+
+			.tag {
+				display: flex;
+				font-weight: normal;
+				align-items: center;
+
+				text {
+					display: block;
+					width: 60rpx;
+					height: 34rpx;
+					line-height: 34rpx;
+					color: #ffffff;
+					font-size: 20rpx;
+					border-radius: 6rpx;
+					text-align: center;
+					margin-left: 30rpx;
+					background-color: rgb(49, 145, 253);
+				}
+
+				.red {
+					background-color: red
+				}
+			}
+		}
+
+		.bottom {
+			display: flex;
+			margin-top: 20rpx;
+			font-size: 28rpx;
+			align-items: center;
+			justify-content: space-between;
+			color: #999999;
+
+		}
+	}
+
+	.addSite {
+		display: flex;
+		justify-content: space-around;
+		width: 600rpx;
+		line-height: 80rpx;
+		position: fixed;
+		bottom: 15rpx;
+		left: 80rpx;
+		background-color: red;
+		border-radius: 60rpx;
+		font-size: 30rpx;
+
+		.add {
+			display: flex;
+			align-items: center;
+			color: #ffffff;
+
+			.icon {
+				margin-right: 10rpx;
+			}
+		}
+	}
+
 	.address-name {
 		display: flex;
 		width: 600rpx;
@@ -394,10 +472,7 @@
 	.addForm {
 		width: 100%;
 		height: 100%;
-		display: flex;
-		justify-content: center;
-		flex-direction: column;
-		align-items: center;
+		padding: 30rpx 60rpx;
 	}
 
 	.container {
@@ -405,9 +480,10 @@
 	}
 
 	.address-list {
+		// width: 100%;
+		// background-color: #fff;
+		// margin-top: 20upx;
 		width: 100%;
-		background-color: #fff;
-		margin-top: 20upx;
 	}
 
 	.address-list .a-address {
